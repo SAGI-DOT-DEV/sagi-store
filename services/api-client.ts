@@ -1,4 +1,7 @@
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000').replace(/\/$/, '');
+// Browsers always use the same-origin proxy. Server reads use the private upstream.
+const API_URL = typeof window === 'undefined'
+  ? (process.env.BACKEND_API_URL || 'http://localhost:3000').replace(/\/$/, '')
+  : '';
 export const TOKEN_KEY = 'sagi_access_token';
 let sessionVersion = 0;
 let refreshPromise: Promise<string> | null = null;
