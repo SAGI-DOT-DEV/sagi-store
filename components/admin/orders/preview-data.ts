@@ -1,0 +1,30 @@
+export const orders = [
+  {
+    id: '#SGI-8402',
+    customer: 'Eleanor Vance',
+    email: 'eleanor.v@example.com',
+    date: 'Oct 24, 2024',
+    total: 'CAD 245.00',
+    status: 'Paid',
+    dotColor: 'bg-admin-secondary',
+  },
+  {
+    id: '#SGI-8401',
+    customer: 'Marcus Thorne',
+    email: 'm.thorne@studio.co',
+    date: 'Oct 23, 2024',
+    total: 'CAD 1,120.00',
+    status: 'Processing',
+    dotColor: 'bg-admin-surface-tint',
+  },
+  {
+    id: '#SGI-8399',
+    customer: 'Clara Bow',
+    email: 'c.bow@heritage.net',
+    date: 'Oct 21, 2024',
+    total: 'CAD 85.50',
+    status: 'Shipped',
+    dotColor: '',
+    shipped: true,
+  },
+];

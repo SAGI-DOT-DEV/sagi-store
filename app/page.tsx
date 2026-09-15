@@ -1,6 +1,14 @@
-import Image from "next/image";
+import { RouteContent } from "../components/RouteContent";
+import { StorefrontShell } from "../components/StorefrontShell";
+import { getHomeContent } from "../services/home-content.service";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const content = await getHomeContent();
+  return <StorefrontShell><RouteContent view="home" content={content} /></StorefrontShell>;
+
+  /* Legacy starter markup retained below for easy diff review during migration.
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -65,5 +73,5 @@ export default function Home() {
         </div>
       </main>
     </div>
-  );
+  ); */
 }

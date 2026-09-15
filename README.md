@@ -34,3 +34,47 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## SAGI Culinary Boutique — Next.js frontend
+
+This project is the Next.js App Router version of the original SAGI React storefront. The UI remains intentionally componentized: shared chrome lives in `components/`, the cart state is in `context/`, catalog content is in `data/`, and screen-level compositions are in `views/`.
+
+### Development
+
+```bash
+npm install
+npm run dev
+```
+
+The storefront is available at `http://localhost:3000`.
+
+### Production
+
+```bash
+npm run build
+npm run start
+```
+
+Set the public backend URL in the frontend environment according to the API client integration. Keep frontend environment files out of Git when they contain deployment-specific values.
+# Authentication integration
+
+Set `NEXT_PUBLIC_API_URL` in `.env.local` to the backend origin (for example, `http://localhost:3000` locally or the Render API URL in production). Authentication is organized into:
+
+- `services/api-client.ts` for HTTP requests and API errors
+- `services/auth.service.ts` for backend auth operations
+- `services/auth.actions.ts` for validated mutations
+- `schemas/auth.schema.ts` for Zod validation
+- `context/AuthContext.tsx` for the browser session
+- `components/auth/` for the login/register UI
+
+The navbar Account control supports sign in, registration, email-verification messaging, session refresh, and sign out.
+
+### Sanity home content
+
+The home page reads an optional `homePage` document from Sanity. Copy `.env.sanity.example` into `.env.local` and set `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET`. Without those values, the curated local content is used automatically. The navbar remains hard-coded.
+
+The standalone Studio lives at `front-end/studio-sabi-brand` and is run independently:
+
+```bash
+cd studio-sabi-brand
+npm run dev
+```

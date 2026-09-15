@@ -1,0 +1,44 @@
+"use client";
+
+import { CheckCircle, X } from 'lucide-react';
+
+export interface ToastItem {
+  id: string;
+  message: string;
+  productName?: string;
+}
+
+interface ToastContainerProps {
+  toasts: ToastItem[];
+  onDismiss: (id: string) => void;
+}
+
+export function ToastContainer({ toasts, onDismiss }: ToastContainerProps) {
+  if (!toasts.length) return null;
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex w-full max-w-sm flex-col gap-2 pointer-events-none">
+      {toasts.map((toast) => (
+        <div
+          key={toast.id}
+          className="bg-[#1C1A17] text-[#FAF9F5] border border-[#3E382E] p-4 rounded-sm shadow-xl flex items-start gap-3 pointer-events-auto animate-in slide-in-from-bottom-5 duration-200"
+        >
+          <CheckCircle className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+          <div className="flex-1 text-xs">
+            <div className="font-bold">{toast.message}</div>
+            {toast.productName && (
+              <div className="text-[#A39B8E] mt-0.5">{toast.productName}</div>
+            )}
+          </div>
+          <button
+            onClick={() => onDismiss(toast.id)}
+            className="text-[#7A7264] hover:text-[#FAF9F5] p-0.5"
+            aria-label="Dismiss notification"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}

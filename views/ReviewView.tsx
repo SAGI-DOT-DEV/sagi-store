@@ -1,0 +1,25 @@
+'use client';
+import {useEffect,useState} from 'react';
+import Link from 'next/link';
+import {CheckCircle2,MessageSquare} from 'lucide-react';
+import {useAuth} from '../context/AuthContext';
+import {reviewsService} from '../services/reviews.service';
+import {ApiError} from '../services/api-client';
+import type {ExperienceReview} from '../schemas/review.schema';
+import {ReviewForm} from '../components/reviews/ReviewForm';
+type ReviewOrder=Awaited<ReturnType<typeof reviewsService.order>>;
+function ReviewLoader(){return <div role="status" className="space-y-5 animate-pulse"><span className="sr-only">Loading your review</span>{[0,1,2].map(i=><div key={i} className="h-16 rounded-lg bg-[#EFECE4]"/>)}</div>;}
+function OrderReview({orderId,token}:{orderId:string;token:string}){
+ const [revision,setRevision]=useState(0),[result,setResult]=useState<{order?:ReviewOrder;review?:ExperienceReview|null;error?:string}>(),[saved,setSaved]=useState<ExperienceReview>();
+ useEffect(()=>{let active=true;Promise.all([reviewsService.order(orderId,token),reviewsService.get(orderId,token)]).then(([order,review])=>{if(active)setResult({order,review});}).catch(cause=>{if(active)setResult({error:cause instanceof ApiError&&cause.status===404?'This order is unavailable. Make sure you are signed in with the account that placed it.':'Unable to load your order. Please try again.'});});return()=>{active=false;};},[orderId,token,revision]);
+ const review=saved??result?.review;
+ if(!result)return <ReviewLoader/>;
+ if(result.error)return <div role="alert"><p>{result.error}</p><button onClick={()=>setRevision(n=>n+1)} className="mt-4 underline">Try again</button></div>;
+ if(review)return <section><CheckCircle2 className="h-10 w-10 text-[#8C7B5A]"/><h2 className="mt-4 font-serif text-3xl">Thank you for sharing.</h2><p className="mt-3 text-sm text-[#7A7264]">{saved?'Your review has been saved.':'You have already reviewed this order.'} Your feedback helps us improve the SAGI experience.</p><dl className="mt-6 space-y-3 text-sm">{[['Overall',review.overallRating],['Delivery',review.deliveryRating],['Checkout',review.checkoutRating]].map(([label,rating])=>rating!=null&&<div key={String(label)} className="flex justify-between border-b border-[#E8E2D5] pb-3"><dt>{label}</dt><dd>{rating} / 5</dd></div>)}</dl>{review.comment&&<p className="mt-5 whitespace-pre-wrap text-sm leading-relaxed">{review.comment}</p>}<Link href="/products" className="mt-7 inline-block underline text-sm">Explore the collection</Link></section>;
+ if(result.order?.status!=='DELIVERED')return <section><h2 className="font-serif text-2xl">Your review comes after delivery.</h2><p className="mt-4 text-sm text-[#7A7264]">This order is currently {result.order?.status.toLowerCase().replaceAll('_',' ')}. Once it is marked delivered, return here to share your experience.</p><Link href="/purchase-history" className="inline-block mt-6 underline">View order history</Link></section>;
+ return <><div className="mb-8 border-b border-[#E8E2D5] pb-6"><p className="text-[10px] uppercase tracking-widest text-[#8C7B5A]">Your delivered order</p><ul className="mt-3 space-y-2 text-sm">{result.order.items.map(item=><li key={item.id}>{item.name} <span className="text-[#7A7264]">× {item.quantity}</span></li>)}</ul></div><ReviewForm orderId={orderId} token={token} onSaved={setSaved} onReload={()=>setRevision(n=>n+1)}/></>;
+}
+export function ReviewView({orderId}:{orderId:string|null}){
+ const {user,accessToken,isLoading,sessionError,retrySession,setAuthModalOpen}=useAuth();
+ return <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-20"><header className="max-w-2xl mb-10"><p className="flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-[#8C7B5A]"><MessageSquare size={16}/>A note from your pantry</p><h1 className="mt-5 font-serif text-4xl sm:text-6xl">How was your experience<span className="text-[#D4AF37]">?</span></h1><p className="mt-5 text-sm leading-relaxed text-[#7A7264]">From checkout to your doorstep, every detail matters. Tell us how we did.</p></header><div className="max-w-2xl rounded-2xl border border-[#E1D9CA] bg-white p-6 sm:p-10">{!orderId?<section><h2 className="font-serif text-2xl">We need your order link.</h2><p className="mt-3 text-sm text-[#7A7264]">Open the review link in your delivery email to review the correct order.</p></section>:isLoading?<ReviewLoader/>:sessionError?<div><p>We could not verify your session.</p><button onClick={retrySession} className="mt-4 underline">Retry</button></div>:user&&accessToken?<OrderReview key={`${user.id}:${orderId}`} orderId={orderId} token={accessToken}/>:<section><h2 className="font-serif text-2xl">Sign in to share your experience.</h2><p className="mt-3 text-sm text-[#7A7264]">Use the account you placed this order with. Your review link will stay open while you sign in.</p><button onClick={()=>setAuthModalOpen(true)} className="mt-6 rounded-full bg-[#1C1A17] px-7 py-3 text-sm text-white">Sign in</button></section>}</div><Link href="/purchase-history" className="mt-8 inline-block text-xs uppercase tracking-widest text-[#7A7264] underline">Back to purchase history</Link></div>;
+}

@@ -1,0 +1,28 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.piece {
+  position: absolute;
+  top: -20px;
+  width: 8px;
+  height: 12px;
+  opacity: 0;
+  animation: fall var(--duration) ease-in var(--delay) 1 both;
+}
+
+@keyframes fall {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(0deg); }
+  10% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--drift), 105vh, 0) rotate(var(--rotation)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay { display: none; }
+  .piece { animation: none; }
+}
