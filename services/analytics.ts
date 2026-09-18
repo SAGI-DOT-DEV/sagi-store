@@ -5,7 +5,16 @@ export type AnalyticsItem={item_id:string;item_name:string;price:number;quantity
 let initialized=false;
 export function analyticsEnabled(){return typeof window!=='undefined'&&/^G-[A-Z0-9]+$/.test(GA_ID)&&process.env.NEXT_PUBLIC_GA_ENABLED==='true'&&(process.env.NEXT_PUBLIC_GA_DEBUG==='true'||!['localhost','127.0.0.1','::1','[::1]'].includes(window.location.hostname));}
 export function consentGranted(){try{return localStorage.getItem(CONSENT_KEY)==='granted';}catch{return false;}}
-export function safePageLocation(){return window.location.origin+window.location.pathname;}
+export function safePageLocation(){
+ const page=new URL(window.location.origin+window.location.pathname);
+ const landing=new URL(window.location.search||'',page);
+ // Campaign labels only. Never forward arbitrary query parameters or fragments.
+ for(const key of ['utm_source','utm_medium','utm_campaign']){
+  const value=landing.searchParams.get(key);
+  if(value&&/^[a-zA-Z0-9_.-]{1,100}$/.test(value))page.searchParams.set(key,value);
+ }
+ return page.toString();
+}
 export function initializeAnalytics(){
  if(!analyticsEnabled()||!consentGranted()||window.location.pathname.startsWith('/admin'))return false;
  const win=window as unknown as AnalyticsWindow;win[`ga-disable-${GA_ID}`]=false;

@@ -14,6 +14,7 @@ interface AuthResult { user: AuthUser; accessToken: string; }
 
 export const authService = {
   login: (input: LoginInput) => apiRequest<AuthResult>('/api/v1/auth/login', { method: 'POST', body: JSON.stringify(input) }),
+  verifyEmail: (token: string) => apiRequest<{verified:boolean}>('/api/v1/auth/verify-email', {method:'POST',body:JSON.stringify({token})}),
   register: (input: RegisterInput) => {
     const { confirmPassword: _confirmPassword, ...body } = input;
     return apiRequest<{ email: string; verificationEmailSent: boolean }>('/api/v1/auth/register', { method: 'POST', body: JSON.stringify(body) });

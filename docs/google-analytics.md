@@ -48,7 +48,7 @@ Paste from the clipboard directly into the private backend variable. This is sep
 ## Tracking behavior
 
 - Basic opt-in: the Google script is not loaded until Allow analytics is selected. Decline leaves the store usable. Privacy settings allow withdrawal; GA collection is disabled and accessible GA cookies are expired.
-- Admin routes are excluded. Query strings and fragments are not sent as page locations; referral URLs are reduced to their origin. No customer profile, address, Stripe session IDs or raw search terms are intentionally sent.
+- Admin routes are excluded. Only utm_source, utm_medium and utm_campaign query values (1–100 letters, digits, underscores, dots or hyphens) are retained in page locations; other query parameters and fragments are excluded; referral URLs are reduced to their origin. No customer profile, address, Stripe session IDs or raw search terms are intentionally sent.
 - Events: manual SPA `page_view`, live-product `view_item`, backend-successful `add_to_cart`, `begin_checkout` before redirect, `purchase` after the backend confirms payment, and search activity counts without query text.
 - Purchase value is item subtotal; shipping is separate. A stable order ID is `transaction_id`. Browser storage suppresses repeat submissions on reload; GA's transaction ID also supports deduplication. Analytics failure never blocks checkout.
 - Purchase tracking is browser-based, not a Stripe webhook/Measurement Protocol integration. Customers who do not return to the success page, decline consent or block Google may be absent. The database/Stripe remains authoritative for revenue and fulfillment. No historic orders are backfilled.
@@ -57,9 +57,30 @@ Paste from the clipboard directly into the private backend variable. This is sep
 
 ## Verification
 
+### Instagram and Facebook attribution
+
+The dedicated platform cards group up to 1,000 source / medium rows into named platforms, Direct and Other, with sessions and shares. A warning appears if results are truncated. Google Ads is inferred from paid Google source / medium labels, not ad-account spend. Use utm_source=google and utm_medium=cpc on Google Ads campaign links; click IDs remain excluded from analytics page locations. Cards include zero-session platforms. The detailed table remains limited to 10 rows.
+
+The admin Source / Medium table shows the top 10 session sources by sessions, with active users. Traffic channels remains a separate broad grouping. No new environment variables are required; deploy the backend before the frontend.
+
+Share tagged links externally, for example:
+
+```text
+https://sagi-store.vercel.app/?utm_source=instagram&utm_medium=social&utm_campaign=pantry_launch
+https://sagi-store.vercel.app/?utm_source=facebook&utm_medium=social&utm_campaign=pantry_launch
+```
+
+Use `social` for unpaid posts and `paid_social` for ads. Use consistent lowercase campaign labels, not customer names, email addresses or other personal information. Only utm_source, utm_medium and utm_campaign are supported here; other parameters are stripped from analytics page locations. Do not tag internal store links.
+
+Tracking requires consent while the tagged landing URL is available. We do not store campaign parameters before consent. Untagged social referrals may appear under referral hostnames or Direct when referrer information is unavailable. This cannot reconstruct previously missing attribution. Google processing and the five-minute API cache mean this is not a live click counter.
+
+See Google's [campaign URL documentation](https://support.google.com/analytics/answer/10917952) and [sessionSourceMedium dimension](https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema).
+
+### Checklist
+
 1. Use a test property for local development. Restart both apps after configuring environments.
 2. Before consent, verify no requests to googletagmanager.com or Google Analytics collection endpoints in browser Network tools.
-3. Allow analytics, browse storefront routes, then inspect GA DebugView. Check that one page view occurs per path navigation and URLs have no query strings.
+3. Allow analytics, browse storefront routes, then inspect GA DebugView. Check that one page view occurs per path navigation and URLs contain only the approved campaign parameters, never session IDs or search text.
 4. Add an item successfully, begin checkout, and complete a Stripe test payment with webhook processing enabled. Purchase should appear only after confirmed payment; reloading should not resend it from that browser.
 5. Visit `/admin/analytics` with an ADMIN account. Reporting may lag DebugView. Empty reports initially are normal. Verify non-admin users cannot access `/api/v1/admin/analytics`.
 6. Decline via Privacy settings and verify collection stops. Test admin navigation too.
