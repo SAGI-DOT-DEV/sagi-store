@@ -1,4 +1,5 @@
 import { DistributorSignup } from './DistributorSignup';
+import { StoreLogo } from './StoreLogo';
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ShieldCheck, Truck, Sparkles, Award } from 'lucide-react';
@@ -126,7 +127,7 @@ export const Footer: React.FC = () => {
                   </button>
                 </li>
                 <li>
-                  <span className="text-[#696254]">Lagos • London • New York</span>
+                  <span className="text-[#696254]">Canada</span>
                 </li>
               </ul>
             </div>
@@ -137,7 +138,7 @@ export const Footer: React.FC = () => {
       {/* Bottom Legal & Colophon */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-[#262420] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#7A7264]">
         <div className="flex items-center gap-2">
-          <span className="font-serif text-lg tracking-widest font-black uppercase text-[#FAF9F5]">SAGI</span>
+          <StoreLogo className="w-16 invert" />
           <span>© {new Date().getFullYear()} Sagi Culinary Boutique. All rights reserved.</span>
         </div>
         <div className="flex items-center gap-6">

@@ -10,6 +10,7 @@ import { useAuth } from './AuthContext';
 import { addCartItem, getCart, mapCartItem, removeCartItem, updateCartItem } from '../services/cart.service';
 
 interface ToastNotification {
+  status?: 'loading' | 'success' | 'error';
   id: string;
   message: string;
   productName?: string;
@@ -39,6 +40,7 @@ interface CartContextType {
   addingToCartKey: string | null;
   toasts: ToastNotification[];
   dismissToast: (id: string) => void;
+  showToast: (message: string, productName?: string, status?: 'loading' | 'success' | 'error') => string;
   navigateToProduct: (productId: string) => void;
   navigateToJournal: (journal: JournalArticle) => void;
 }
@@ -112,12 +114,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const selectedProduct = PRODUCTS.find((p) => p.id === selectedProductId) || PRODUCTS[0];
 
-  const showToast = (message: string, productName?: string) => {
-    const id = Date.now().toString();
-    setToasts((prev) => [...prev, { id, message, productName }]);
-    setTimeout(() => {
+  const showToast = (message: string, productName?: string, status: 'loading' | 'success' | 'error' = 'success') => {
+    const id = crypto.randomUUID();
+    setToasts((prev) => [...prev, { id, message, productName, status }]);
+    if (status !== 'loading') setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
+    return id;
   };
 
   const dismissToast = (id: string) => {
@@ -199,7 +202,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const navigateToProduct = (productId: string) => {
     setSelectedProductId(productId);
     setActiveViewState('product-detail');
-    router.push(`/products/${productId}`);
+    router.push(`/products/${encodeURIComponent(productId)}`);
     setIsCartOpen(false);
     setIsSearchOpen(false);
   };
@@ -237,6 +240,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addingToCartKey,
         toasts,
         dismissToast,
+        showToast,
         navigateToProduct,
         navigateToJournal,
       }}

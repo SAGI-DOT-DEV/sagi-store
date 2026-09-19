@@ -5,10 +5,10 @@ export interface AuthUser {
   id: string;
   email: string;
   role: string;
-  profile?: { firstName?: string; lastName?: string } | null;
+  profile?: { firstName?: string; lastName?: string; phone?: string | null } | null;
   addresses?: Address[];
 }
-export interface Address { id: string; label?: string | null; line1: string; line2?: string | null; city: string; state?: string | null; country: string; postalCode: string; isDefault: boolean; }
+export interface Address { id: string; phone?: string | null; phone2?: string | null; label?: string | null; line1: string; line2?: string | null; city: string; state?: string | null; country: string; postalCode: string; isDefault: boolean; }
 
 interface AuthResult { user: AuthUser; accessToken: string; }
 

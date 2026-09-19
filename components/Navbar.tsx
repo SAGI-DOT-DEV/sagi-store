@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Search, ShoppingBag, Menu, X, ArrowRight, Sparkles, BookOpen, Layers, Globe } from 'lucide-react';
 import { AccountButton } from './auth/AuthModal';
+import { StoreLogo } from './StoreLogo';
 import { AnimatedPanel } from './ui/AnimatedPanel';
 
 export const Navbar: React.FC = () => {
@@ -86,9 +87,7 @@ export const Navbar: React.FC = () => {
               onClick={() => setActiveView('home')}
               className="group flex flex-col items-center justify-center transition-transform duration-200 hover:scale-[1.02]"
             >
-              <span className="font-serif text-3xl sm:text-4xl tracking-widest font-black uppercase text-[#1C1A17] leading-none">
-                SAGI
-              </span>
+              <StoreLogo className="w-28 sm:w-36" />
               <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#7A7264] font-medium mt-1">
                 Culinary Boutique
               </span>
@@ -189,8 +188,8 @@ export const Navbar: React.FC = () => {
           </div>
 
           <div className="pt-2 flex items-center justify-between text-xs text-[#7A7264]">
-            <span>Lagos • London • New York</span>
-            <span>Est. 2024</span>
+            <span>Canada</span>
+            <span>Est. 2026</span>
           </div>
         </div>
       </AnimatedPanel>

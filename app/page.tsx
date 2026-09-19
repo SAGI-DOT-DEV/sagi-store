@@ -1,4 +1,6 @@
 import { RouteContent } from "../components/RouteContent";
+import { pageMetadata, siteDescription } from '../services/seo';
+export const metadata = pageMetadata('Nigerian Pantry Staples in Canada', siteDescription, '/');
 import { StorefrontShell } from "../components/StorefrontShell";
 import { getHomeContent } from "../services/home-content.service";
 

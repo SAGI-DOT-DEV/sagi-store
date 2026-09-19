@@ -10,9 +10,10 @@ import { z } from 'zod';
 const USER_KEY = 'sagi_auth_user';
 const cachedUserSchema = z.object({
   id: z.string(), email: z.string().email(), role: z.string(),
-  profile: z.object({ firstName: z.string().optional(), lastName: z.string().optional() }).nullable().optional(),
+  profile: z.object({ firstName: z.string().optional(), lastName: z.string().optional(), phone: z.string().nullable().optional() }).nullable().optional(),
   addresses: z.array(z.object({
     id: z.string(), label: z.string().nullable().optional(), line1: z.string(), line2: z.string().nullable().optional(),
+    phone: z.string().nullable().optional(), phone2: z.string().nullable().optional(),
     city: z.string(), state: z.string().nullable().optional(), country: z.string(), postalCode: z.string(), isDefault: z.boolean(),
   })).optional(),
 });
@@ -26,6 +27,8 @@ interface AuthContextValue {
   retrySession: () => void;
   authModalOpen: boolean;
   setAuthModalOpen: (open: boolean) => void;
+  profileModalOpen: boolean;
+  setProfileModalOpen: (open: boolean) => void;
   login: (input: LoginInput) => Promise<void>;
   register: (input: RegisterInput) => Promise<{ email: string; verificationEmailSent: boolean }>;
   logout: () => Promise<void>;
@@ -39,7 +42,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [accountModal, setAccountModal] = useState<'auth' | 'profile' | null>(null);
+  const authModalOpen = accountModal === 'auth';
+  const profileModalOpen = accountModal === 'profile';
+  const setAuthModalOpen = (open: boolean) => setAccountModal(current => open ? 'auth' : current === 'auth' ? null : current);
+  const setProfileModalOpen = (open: boolean) => setAccountModal(current => open ? 'profile' : current === 'profile' ? null : current);
   const [sessionError, setSessionError] = useState(false);
   const [restoreAttempt, setRestoreAttempt] = useState(0);
   const retrySession = () => { setIsLoading(true); setSessionError(false); setRestoreAttempt(value => value + 1); };
@@ -113,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     clearUserCache();
     saveSessionToken(null);
-    setAccessToken(null); setUser(null); setAuthModalOpen(false);
+    setAccessToken(null); setUser(null); setAccountModal(null);
     try { await authService.logout(); } finally {
       window.localStorage.removeItem(TOKEN_KEY); setAccessToken(null); setUser(null);
     }
@@ -131,7 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser((current) => current ? { ...current, addresses: (current.addresses || []).map((item) => item.id === id ? address : (address.isDefault ? { ...item, isDefault: false } : item)) } : current);
   };
 
-  return <AuthContext.Provider value={{ user, accessToken, isLoading, sessionError, retrySession, authModalOpen, setAuthModalOpen, login, register, logout, addAddress, updateAddress }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, accessToken, isLoading, sessionError, retrySession, authModalOpen, setAuthModalOpen, profileModalOpen, setProfileModalOpen, login, register, logout, addAddress, updateAddress }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

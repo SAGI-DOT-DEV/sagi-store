@@ -21,6 +21,8 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 
 export const addressSchema = z.object({
+  phone: z.string().trim().max(30).regex(/^\+?[\d\s().-]+$/, 'Enter a valid phone number').refine(value => value.replace(/\D/g, '').length >= 7 && value.replace(/\D/g, '').length <= 15, 'Use 7–15 digits'),
+  phone2: z.union([z.literal(''), z.string().trim().max(30).regex(/^\+?[\d\s().-]+$/, 'Enter a valid phone number').refine(value => value.replace(/\D/g, '').length >= 7 && value.replace(/\D/g, '').length <= 15, 'Use 7–15 digits')]).optional(),
   label: z.string().trim().max(80).optional(),
   line1: z.string().trim().min(1, 'Address is required').max(200),
   line2: z.string().trim().max(200).optional(),

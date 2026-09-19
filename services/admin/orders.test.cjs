@@ -1,6 +1,14 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const vm=require('node:vm');const ts=require('typescript');
 function load(apiRequest){const context={exports:{},require:name=>name==='zod'?require('zod'):{apiRequest}};vm.runInNewContext(ts.transpileModule(fs.readFileSync(require.resolve('./orders.service.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);return context.exports;}
 const order={id:'o1',status:'PAID',currency:'CAD',total:'20.00',createdAt:'2026-09-13T00:00:00Z',user:{email:'test@example.com',profile:null},_count:{items:1}};
+test('retains both delivery phones and accepts older addresses without them',()=>{
+ const {adminOrderDetailSchema}=load();
+ const address={line1:'123 Main Street',line2:null,city:'Toronto',state:'ON',country:'CA',postalCode:'M5V 2T6'};
+ const detail={...order,subtotal:18,shippingAmount:2,shippingCarrier:null,shippingService:null,items:[],histories:[],payments:[]};
+ const parsed=adminOrderDetailSchema.parse({...detail,address:{...address,phone:'+1 416 555 1234',phone2:'+1 416 555 5678'}});
+ assert.equal(parsed.address.phone,'+1 416 555 1234');assert.equal(parsed.address.phone2,'+1 416 555 5678');
+ for(const phones of [{},{phone:null,phone2:null},{phone:'',phone2:''}]) assert.equal(adminOrderDetailSchema.safeParse({...detail,address:{...address,...phones}}).success,true);
+});
 test('ledger retains linked product names and saved names for deleted products',()=>{const {adminOrderSchema}=load();const result=adminOrderSchema.parse({...order,items:[{id:'i1',name:'Standard',quantity:2,variant:{product:{name:'Yam flour'}}},{id:'i2',name:'Rice',quantity:1,variant:null}]});assert.equal(result.items[0].variant.product.name,'Yam flour');assert.equal(result.items[0].quantity,2);assert.equal(result.items[1].name,'Rice');assert.equal(result.items[1].variant,null);});
 test('only exposes the valid next fulfillment transition',()=>{const {nextFulfillment}=load();assert.equal(nextFulfillment('PAID'),'PROCESSING');assert.equal(nextFulfillment('PROCESSING'),'SHIPPED');assert.equal(nextFulfillment('SHIPPED'),'OUT_FOR_DELIVERY');assert.equal(nextFulfillment('OUT_FOR_DELIVERY'),'DELIVERED');for(const status of ['PENDING_PAYMENT','DELIVERED','CANCELLED','REFUNDED','PAYMENT_REVIEW_REQUIRED'])assert.equal(nextFulfillment(status),undefined);});
 test('parses missing profile, address and image without dropping order details',()=>{const service=load();const detail=service.adminOrderDetailSchema.parse({...order,subtotal:'18',shippingAmount:'2',shippingCarrier:null,shippingService:null,address:null,items:[{id:'i1',name:'Rice',sku:'RICE',quantity:1,unitPrice:'18',variant:null}],histories:[],payments:[]});assert.equal(detail.total,20);assert.equal(detail.items[0].name,'Rice');assert.equal(detail.address,null);});

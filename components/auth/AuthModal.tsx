@@ -21,10 +21,16 @@ export function AuthModal({ open, onClose }: { open: boolean; onClose: () => voi
 
 export function AccountButton() {
   const { user, isLoading, sessionError, retrySession } = useAuth();
-  const { authModalOpen, setAuthModalOpen } = useAuth();
-  const [profileOpen, setProfileOpen] = useState(false);
+  const { setAuthModalOpen, setProfileModalOpen } = useAuth();
   if (isLoading) return <AccountButtonSkeleton />;
   if (sessionError && !user) return <button onClick={retrySession} className="rounded-full bg-[#1C1A17] px-4 py-2.5 text-xs text-[#FAF9F5]">Retry account</button>;
-  if (user) return <><button onClick={() => setProfileOpen(true)} className="flex items-center gap-2 rounded-full bg-[#1C1A17] px-3.5 py-2.5 text-[#FAF9F5] shadow-sm transition-colors hover:bg-[#33302B]" title="Open your profile"><UserCircle className="h-5 w-5 text-[#D4AF37]" /><span className="text-xs font-semibold uppercase tracking-wider">Profile</span></button><ProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} /></>;
-  return <><button onClick={() => setAuthModalOpen(true)} className="flex items-center gap-2 rounded-full bg-[#1C1A17] px-3.5 py-2.5 text-[#FAF9F5] shadow-sm transition-colors hover:bg-[#33302B]" title="Sign in or create an account"><UserCircle className="h-5 w-5 text-[#D4AF37]" /><span className="text-xs font-semibold uppercase tracking-wider">Sign in</span></button><AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} /></>;
+  return <button onClick={() => user ? setProfileModalOpen(true) : setAuthModalOpen(true)} className="flex items-center gap-2 rounded-full bg-[#1C1A17] px-3.5 py-2.5 text-[#FAF9F5] shadow-sm transition-colors hover:bg-[#33302B]" title={user ? 'Open your profile' : 'Sign in or create an account'}><UserCircle className="h-5 w-5 text-[#D4AF37]" /><span className="text-xs font-semibold uppercase tracking-wider">{user ? 'Profile' : 'Sign in'}</span></button>;
+}
+
+// Mounted once in the root layout, never once per desktop/mobile button.
+export function AccountModalHost() {
+  const { user, authModalOpen, setAuthModalOpen, profileModalOpen, setProfileModalOpen } = useAuth();
+  if (authModalOpen) return <AuthModal open onClose={() => setAuthModalOpen(false)} />;
+  if (profileModalOpen && user) return <ProfileModal open onClose={() => setProfileModalOpen(false)} />;
+  return null;
 }

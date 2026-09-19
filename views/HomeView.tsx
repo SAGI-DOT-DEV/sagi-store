@@ -261,12 +261,14 @@ export const HomeView: React.FC<{ content?: HomeContent }> = ({
                   </span>
                   <button
                     onClick={() => addToCart(product)}
-                    disabled={addingToCartKey === `${product.id}:${product.availableSizes[0]?.weight || '1 KG Jar'}`}
-                    className="bg-[#1C1A17] hover:bg-[#36322A] text-[#FAF9F5] p-2 rounded-sm text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition-colors"
-                    title="Add to Pantry Bag"
+                    disabled={!product.availableSizes[0]?.inStock || addingToCartKey === `${product.id}:${product.availableSizes[0]?.weight || '1 KG Jar'}`}
+                    className="bg-[#1C1A17] hover:bg-[#36322A] text-[#FAF9F5] p-2 rounded-sm text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition-colors disabled:bg-[#E8E2D5] disabled:text-[#7A7264] disabled:cursor-not-allowed"
+                    title={product.availableSizes[0]?.inStock ? 'Add to Pantry Bag' : 'No stock'}
                   >
-                    {addingToCartKey === `${product.id}:${product.availableSizes[0]?.weight || '1 KG Jar'}` ? <LoaderCircle className="w-3.5 h-3.5 animate-spin text-[#D4AF37]" /> : <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}
-                    <span className="hidden sm:inline text-[11px]">Add</span>
+                    {!product.availableSizes[0]?.inStock ? <span className="text-[11px]">No stock</span> : <>
+                      {addingToCartKey === `${product.id}:${product.availableSizes[0]?.weight || '1 KG Jar'}` ? <LoaderCircle className="w-3.5 h-3.5 animate-spin text-[#D4AF37]" /> : <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />}
+                      <span className="hidden sm:inline text-[11px]">Add</span>
+                    </>}
                   </button>
                 </div>
               </div>

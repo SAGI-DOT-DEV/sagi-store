@@ -9,7 +9,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { ProfileModal } from '../components/auth/ProfileModal';
+import { CheckoutContactCard } from '../components/checkout/CheckoutContactCard';
+import { MissingDeliveryAddress } from '../components/checkout/MissingDeliveryAddress';
 import { AuthSelect } from '../components/auth/AuthSelect';
 import { ShippingOptions, formatMoney } from '../components/checkout/ShippingOptions';
 import { getShippingQuote, type ShippingQuote } from '../services/shipping.service';
@@ -19,9 +20,8 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
   const cartEditVersion = useRef(0);
   const [restoreDismissed, setRestoreDismissed] = useState(false);
   const { cart, addingToCartKey, setActiveView } = useCart();
-  const { user, accessToken, isLoading: authLoading, setAuthModalOpen } = useAuth();
+  const { user, accessToken, isLoading: authLoading, setAuthModalOpen, setProfileModalOpen } = useAuth();
   const [addressId, setAddressId] = useState('');
-  const [profileOpen, setProfileOpen] = useState(false);
   const [result, setResult] = useState<{ key: string; quote?: ShippingQuote; error?: string } | null>(null);
   const [rateId, setRateId] = useState('');
   const [retry, setRetry] = useState(0);
@@ -89,7 +89,8 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
     rate.currency.toUpperCase() === quote.currency.toUpperCase()
     && Number.isFinite(Number(rate.amount)) && Number(rate.amount) >= 0) || [];
   const rate = rates.find((item) => item.id === rateId);
-  const money = (amount: number) => quote ? formatMoney(amount, quote.currency) : '—';
+  const subtotal = quote?.subtotal ?? cart.reduce((sum, item) => sum + Math.round(item.unitPrice * 100) * item.quantity, 0) / 100;
+  const money = (amount: number) => formatMoney(amount, quote?.currency || 'CAD');
 
   useEffect(() => {
     if (!ready || !accessToken || !address) return;
@@ -150,11 +151,7 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
         {authLoading ? <p role="status">Loading your account…</p> : !user ? (
           <button type="button" onClick={() => setAuthModalOpen(true)} className="rounded bg-[#1C1A17] px-6 py-3 text-[#FAF9F5]">Sign in to select a delivery address</button>
         ) : <>
-          <section className="space-y-3 rounded-lg border border-[#E8E2D5] p-5">
-            <h2 className="font-serif text-xl">Contact information</h2>
-            <p className="text-sm">{user.profile?.firstName} {user.profile?.lastName}</p>
-            <p className="text-sm text-[#6B6457]">{user.email}</p>
-          </section>
+          <CheckoutContactCard user={user} address={resumeOrder ? undefined : address} />
           {!resumeOrder && !restoring && <section className="space-y-4">
             <h2 className="font-serif text-xl">Shipping destination</h2>
             {address ? <>
@@ -167,10 +164,10 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
                 {address.line1}<br />{address.line2 && <>{address.line2}<br /></>}
                 {address.city}, {address.state} {address.postalCode}<br />{address.country}
               </address>
-            </> : <p className="text-sm text-[#7A7264]">Save a delivery address to see available shipping rates.</p>}
-            <button type="button" disabled={checkoutBusy || Boolean(resumeOrder)} onClick={() => setProfileOpen(true)} className="text-sm font-semibold underline underline-offset-4">
-              {address ? 'Add or edit addresses' : 'Add delivery address'}
-            </button>
+            </> : <MissingDeliveryAddress onAdd={() => setProfileModalOpen(true)} disabled={checkoutBusy} />}
+            {address && <button type="button" disabled={checkoutBusy || Boolean(resumeOrder)} onClick={() => setProfileModalOpen(true)} className="text-sm font-semibold underline underline-offset-4">
+              Add or edit addresses
+            </button>}
           </section>}
         </>}
         {restoring && <p role="status" className="text-sm text-[#7A7264]">Restoring your order...</p>}
@@ -206,6 +203,7 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
         <h2 className="font-serif text-xl">Order summary</h2>
         {restoring ? <p role="status">Loading saved order...</p> : restoreError ? <p className="text-sm text-[#7A7264]">Order details temporarily unavailable.</p> : resumeOrder ? <SavedOrderSummary order={resumeOrder.order} /> : <>
         <div className="max-h-80 space-y-4 overflow-y-auto">
+          {!cart.length && <p className="py-4 text-sm text-[#7A7264]">Your bag is empty. <Link href="/products" className="underline underline-offset-4">Explore the collection</Link></p>}
           {cart.map((item) => <div key={item.variantId || item.product.id} className="flex items-center gap-3">
             <img src={item.product.image || '/product-placeholder.svg'} alt={item.product.name} className="h-14 w-14 rounded object-cover" />
             <div className="flex-1 text-sm"><p>{item.product.name}</p><p className="text-xs text-[#7A7264]">{item.selectedWeight} × {item.quantity}</p></div>
@@ -213,14 +211,13 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
           </div>)}
         </div>
         <dl className="space-y-3 border-t border-[#E8E2D5] pt-4 text-sm">
-          <div className="flex justify-between"><dt>Subtotal</dt><dd>{quote ? money(quote.subtotal) : '—'}</dd></div>
-          <div className="flex justify-between"><dt>Shipping</dt><dd>{rate ? money(Number(rate.amount)) : 'Select an address and rate'}</dd></div>
-          <div className="flex justify-between border-t border-[#E8E2D5] pt-4 font-semibold"><dt>Estimated total</dt><dd>{quote && rate ? money((Math.round(quote.subtotal * 100) + Math.round(Number(rate.amount) * 100)) / 100) : '—'}</dd></div>
+          <div className="flex justify-between"><dt>Subtotal</dt><dd>{money(subtotal)}</dd></div>
+          <div className="flex justify-between gap-4"><dt>Shipping</dt><dd className="text-right text-[#7A7264]">{rate ? money(Number(rate.amount)) : loading ? 'Calculating…' : !address ? 'Add an address to calculate' : 'Select a shipping rate'}</dd></div>
+          <div className="flex justify-between border-t border-[#E8E2D5] pt-4 font-semibold"><dt>{rate ? 'Estimated total' : 'Total before shipping'}</dt><dd>{money((Math.round(subtotal * 100) + (rate ? Math.round(Number(rate.amount) * 100) : 0)) / 100)}</dd></div>
         </dl>
-        <p className="text-xs text-[#7A7264]">This is a shipping estimate. No payment has been taken.</p>
+        <p className="text-xs leading-5 text-[#7A7264]">{rate ? 'This is a shipping estimate. No payment has been taken.' : 'Shipping is not included yet. Select a delivery address and shipping rate to confirm your final total.'}</p>
         </>}
       </aside>
     </div>
-    <ProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} />
   </div>;
 };
