@@ -31,28 +31,28 @@ export const JournalsView: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16">
       {/* Header */}
       <div className="space-y-4 max-w-3xl">
-        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">
+        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#737373]">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Research & Gastronomy</span>
         </div>
-        <h1 className="font-serif text-3xl sm:text-5xl font-normal text-[#1C1A17] tracking-tight leading-tight">
+        <h1 className="font-serif text-3xl sm:text-5xl font-normal text-[#000000] tracking-tight leading-tight">
           The Kitchen Journals & Masterclasses
         </h1>
-        <p className="text-xs sm:text-sm text-[#6B6457] leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#535353] leading-relaxed">
           Quantitative gastronomy and scientific inquiry into West African culinary mechanics, thermal transitions, hydration thermodynamics, and ancestral ferments.
         </p>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[#E8E2D5] scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[#E4E4E4] scrollbar-none">
         {filterTabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setSelectedFilter(tab)}
             className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap ${
               selectedFilter === tab
-                ? 'bg-[#1C1A17] text-[#FAF9F5]'
-                : 'bg-[#EFECE4] text-[#5C5549] hover:bg-[#E5DFC9] hover:text-[#1C1A17]'
+                ? 'bg-[#000000] text-[#FFFFFF]'
+                : 'bg-[#F4F4F4] text-[#404040] hover:bg-[#E4E4E4] hover:text-[#000000]'
             }`}
           >
             {tab === 'All' ? 'All Publications' : tab}
@@ -62,11 +62,11 @@ export const JournalsView: React.FC = () => {
 
       {/* Volume IV Featured Masterclasses */}
       <div className="space-y-8">
-        <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D5]">
-          <h2 className="font-serif text-2xl font-bold text-[#1C1A17] flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-[#D4AF37]" /> Volume IV: Structural Mechanics (2025/2026)
+        <div className="flex items-center justify-between pb-3 border-b border-[#E4E4E4]">
+          <h2 className="font-serif text-2xl font-bold text-[#000000] flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-[#737373]" /> Volume IV: Structural Mechanics (2025/2026)
           </h2>
-          <span className="text-xs text-[#8C8475] font-semibold uppercase tracking-wider">
+          <span className="text-xs text-[#727272] font-semibold uppercase tracking-wider">
             Current Edition
           </span>
         </div>
@@ -75,9 +75,9 @@ export const JournalsView: React.FC = () => {
           {featured.map((item) => (
             <div
               key={item.id}
-              className="bg-[#FAF9F5] border border-[#E8E2D5] rounded-sm overflow-hidden flex flex-col group hover:shadow-lg transition-all duration-300"
+              className="bg-[#FFFFFF] border border-[#E4E4E4] rounded-sm overflow-hidden flex flex-col group hover:shadow-lg transition-all duration-300"
             >
-              <div className="relative h-72 sm:h-80 bg-[#EFECE4] overflow-hidden">
+              <div className="relative h-72 sm:h-80 bg-[#F4F4F4] overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.title}
@@ -85,10 +85,10 @@ export const JournalsView: React.FC = () => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute top-4 left-4 flex gap-2">
-                  <span className="bg-[#1C1A17] text-[#FAF9F5] text-[10px] font-bold uppercase tracking-widest px-3 py-1 shadow">
+                  <span className="bg-[#000000] text-[#FFFFFF] text-[10px] font-bold uppercase tracking-widest px-3 py-1 shadow">
                     {item.volume} • {item.issue}
                   </span>
-                  <span className="bg-[#D4AF37] text-[#141311] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 shadow">
+                  <span className="bg-[#000000] text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 shadow">
                     {item.category}
                   </span>
                 </div>
@@ -96,40 +96,40 @@ export const JournalsView: React.FC = () => {
 
               <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <div className="flex items-center gap-4 text-xs text-[#8C8475]">
+                  <div className="flex items-center gap-4 text-xs text-[#727272]">
                     <span className="flex items-center gap-1">
-                      <User className="w-3.5 h-3.5 text-[#D4AF37]" /> {item.author}
+                      <User className="w-3.5 h-3.5 text-[#737373]" /> {item.author}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-[#D4AF37]" /> {item.readTime}
+                      <Clock className="w-3.5 h-3.5 text-[#737373]" /> {item.readTime}
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-2xl font-bold text-[#1C1A17] group-hover:text-[#5C5549] leading-tight">
+                  <h3 className="font-serif text-2xl font-bold text-[#000000] group-hover:text-[#404040] leading-tight">
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-[#6B6457] font-medium leading-relaxed">
+                  <p className="text-xs text-[#535353] font-medium leading-relaxed">
                     {item.subtitle}
                   </p>
 
-                  <p className="text-xs text-[#7A7264] line-clamp-3 leading-relaxed pt-1">
+                  <p className="text-xs text-[#535353] line-clamp-3 leading-relaxed pt-1">
                     {item.abstract}
                   </p>
                 </div>
 
-                <div className="pt-6 border-t border-[#EAE4D7] flex flex-wrap items-center justify-between gap-3">
+                <div className="pt-6 border-t border-[#E4E4E4] flex flex-wrap items-center justify-between gap-3">
                   <button
                     onClick={() => setSelectedJournal(item)}
-                    className="bg-[#1C1A17] hover:bg-[#33302B] text-[#FAF9F5] px-5 py-3 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2"
+                    className="bg-[#000000] hover:bg-[#272727] text-[#FFFFFF] px-5 py-3 text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2"
                   >
                     <span>Read Full Abstract</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#737373]" />
                   </button>
 
                   <button
                     onClick={() => navigateToProduct(item.id.includes('garri') ? 'ijebu-gold-garri' : 'artisanal-yam-flour')}
-                    className="text-xs font-bold uppercase tracking-wider text-[#1C1A17] hover:text-[#5C5549] underline underline-offset-4"
+                    className="text-xs font-bold uppercase tracking-wider text-[#000000] hover:text-[#404040] underline underline-offset-4"
                   >
                     Order Ingredient Kit
                   </button>
@@ -141,12 +141,12 @@ export const JournalsView: React.FC = () => {
       </div>
 
       {/* Archive Grid */}
-      <div className="space-y-8 pt-8 border-t border-[#E8E2D5]">
-        <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D5]">
-          <h2 className="font-serif text-2xl font-bold text-[#1C1A17]">
+      <div className="space-y-8 pt-8 border-t border-[#E4E4E4]">
+        <div className="flex items-center justify-between pb-3 border-b border-[#E4E4E4]">
+          <h2 className="font-serif text-2xl font-bold text-[#000000]">
             Archive Studies & Technical Papers
           </h2>
-          <span className="text-xs text-[#8C8475]">Volumes I - III</span>
+          <span className="text-xs text-[#727272]">Volumes I - III</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -154,42 +154,42 @@ export const JournalsView: React.FC = () => {
             <div
               key={art.id}
               onClick={() => setSelectedJournal(art)}
-              className="bg-[#FAF9F5] border border-[#E8E2D5] rounded-sm p-6 flex flex-col justify-between space-y-4 hover:border-[#BDB5A4] hover:shadow-md transition-all cursor-pointer group"
+              className="bg-[#FFFFFF] border border-[#E4E4E4] rounded-sm p-6 flex flex-col justify-between space-y-4 hover:border-[#A2A2A2] hover:shadow-md transition-all cursor-pointer group"
             >
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-[10px] text-[#8C8475] uppercase font-bold tracking-wider">
-                  <span className="text-[#D4AF37]">{art.volume} • {art.issue}</span>
+                <div className="flex items-center justify-between text-[10px] text-[#727272] uppercase font-bold tracking-wider">
+                  <span className="text-[#737373]">{art.volume} • {art.issue}</span>
                   <span>{art.category}</span>
                 </div>
-                <h3 className="font-serif text-lg font-bold text-[#1C1A17] group-hover:text-[#5C5549] leading-snug">
+                <h3 className="font-serif text-lg font-bold text-[#000000] group-hover:text-[#404040] leading-snug">
                   {art.title}
                 </h3>
-                <p className="text-xs text-[#7A7264] line-clamp-3 leading-relaxed">
+                <p className="text-xs text-[#535353] line-clamp-3 leading-relaxed">
                   {art.abstract}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#EAE4D7] flex items-center justify-between text-xs text-[#1C1A17] font-semibold">
-                <span className="flex items-center gap-1 text-[#8C8475]">
+              <div className="pt-4 border-t border-[#E4E4E4] flex items-center justify-between text-xs text-[#000000] font-semibold">
+                <span className="flex items-center gap-1 text-[#727272]">
                   <Clock className="w-3.5 h-3.5" /> {art.readTime}
                 </span>
                 <span className="flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Read Study <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  Read Study <ArrowRight className="w-3.5 h-3.5 text-[#737373]" />
                 </span>
               </div>
             </div>
           ))}
 
           {/* Anthology Reservation Bento Box */}
-          <div className="bg-[#1C1A17] text-[#FAF9F5] p-6 rounded-sm flex flex-col justify-between space-y-4 border border-[#332F27]">
+          <div className="bg-[#000000] text-[#FFFFFF] p-6 rounded-sm flex flex-col justify-between space-y-4 border border-[#272727]">
             <div className="space-y-2">
-              <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#D4AF37]">
+              <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#737373]">
                 Collector's Edition
               </span>
-              <h3 className="font-serif text-xl font-normal text-[#FAF9F5] leading-snug">
+              <h3 className="font-serif text-xl font-normal text-[#FFFFFF] leading-snug">
                 The Complete Anthology: Hardcover Volumes I–IV
               </h3>
-              <p className="text-xs text-[#9E978A] leading-relaxed">
+              <p className="text-xs text-[#A2A2A2] leading-relaxed">
                 A 320-page clothbound compendium featuring full electron-microscopy starch scans, archival recipes, and regional terroir maps.
               </p>
             </div>
@@ -199,7 +199,7 @@ export const JournalsView: React.FC = () => {
                 onClick={() => {
                   setCircleSubscribed(true);
                 }}
-                className="w-full bg-[#D4AF37] hover:bg-[#C29D2C] text-[#141311] py-3 text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-[#000000] hover:bg-[#272727] text-white py-3 text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
               >
                 <Bookmark className="w-3.5 h-3.5" />
                 <span>Reserve Anthology CAD 45,000.00</span>
@@ -210,21 +210,21 @@ export const JournalsView: React.FC = () => {
       </div>
 
       {/* Subscription Callout */}
-      <div className="bg-[#F3EFE6] border border-[#E8E2D5] p-8 sm:p-12 rounded-sm max-w-4xl mx-auto text-center space-y-6">
+      <div className="bg-[#FFFFFF] border border-[#E4E4E4] p-8 sm:p-12 rounded-sm max-w-4xl mx-auto text-center space-y-6">
         <div className="space-y-2">
-          <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#D4AF37]">
+          <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#737373]">
             The SAGI Culinary Institute
           </span>
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1A17]">
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#000000]">
             Join the Masterclass Research Circle
           </h3>
-          <p className="text-xs sm:text-sm text-[#6B6457] max-w-xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#535353] max-w-xl mx-auto leading-relaxed">
             Get peer-reviewed culinary techniques, starch hydration charts, and private lab tasting invitations delivered straight to your inbox monthly.
           </p>
         </div>
 
         {circleSubscribed ? (
-          <div className="bg-[#FAF9F5] border border-[#D9D2C5] p-4 rounded text-xs text-[#2E7D32] max-w-md mx-auto flex items-center justify-center gap-2">
+          <div className="bg-[#FFFFFF] border border-[#D4D4D4] p-4 rounded text-xs text-[#676767] max-w-md mx-auto flex items-center justify-center gap-2">
             <CheckCircle2 className="w-4 h-4" />
             <span>You have joined the SAGI Culinary Research Circle.</span>
           </div>
@@ -236,11 +236,11 @@ export const JournalsView: React.FC = () => {
               value={circleEmail}
               onChange={(e) => setCircleEmail(e.target.value)}
               placeholder="Enter your academic or culinary email"
-              className="bg-[#FAF9F5] border border-[#D9D2C5] text-xs px-4 py-3.5 flex-1 focus:outline-none focus:border-[#1C1A17]"
+              className="bg-[#FFFFFF] border border-[#D4D4D4] text-xs px-4 py-3.5 flex-1 focus:outline-none focus:border-[#000000]"
             />
             <button
               type="submit"
-              className="bg-[#1C1A17] hover:bg-[#33302B] text-[#FAF9F5] text-xs font-bold uppercase tracking-wider px-6 py-3.5 whitespace-nowrap transition-colors"
+              className="bg-[#000000] hover:bg-[#272727] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider px-6 py-3.5 whitespace-nowrap transition-colors"
             >
               Join Circle
             </button>

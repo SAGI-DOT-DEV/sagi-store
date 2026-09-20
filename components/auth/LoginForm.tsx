@@ -37,8 +37,8 @@ export function LoginForm({ onSuccess }: { onSuccess: () => void }) {
   return <form onSubmit={submit} className="space-y-4">
     <AuthField disabled={busy || resending} label="Email address" type="email" autoComplete="email" value={values.email} onChange={(e) => change('email',e.target.value)} error={errors.email} />
     <AuthField disabled={busy || resending} label="Password" type="password" autoComplete="current-password" value={values.password} onChange={(e) => change('password',e.target.value)} error={errors.password} />
-    {message && <p role="status" className={`rounded-md px-3 py-2 text-xs ${verificationRequired ? 'bg-[#F1EEE6] text-[#5C5549]' : 'bg-red-50 text-red-700'}`}>{message}</p>}
-    {verificationRequired && <button type="button" disabled={resending || busy || resent} onClick={()=>void resend()} className="w-full rounded-full border border-[#8C7B5A] px-4 py-3 text-xs font-semibold text-[#6B6457] disabled:opacity-60">{resending ? 'Sending verification email…' : resent ? 'Verification email sent' : 'Resend verification email'}</button>}
-    <button disabled={busy} className="w-full rounded-full bg-[#1C1A17] py-3 text-xs font-semibold uppercase tracking-widest text-[#FAF9F5] transition hover:bg-[#33302B] disabled:opacity-60">{busy ? 'Signing in…' : 'Sign in'}</button>
+    {message && <p role="status" className={`rounded-md px-3 py-2 text-xs ${verificationRequired ? 'bg-[#F4F4F4] text-[#404040]' : 'bg-neutral-50 text-neutral-700'}`}>{message}</p>}
+    {verificationRequired && <button type="button" disabled={resending || busy || resent} onClick={()=>void resend()} className="w-full rounded-full border border-[#737373] px-4 py-3 text-xs font-semibold text-[#535353] disabled:opacity-60">{resending ? 'Sending verification email…' : resent ? 'Verification email sent' : 'Resend verification email'}</button>}
+    <button disabled={busy} className="w-full rounded-full bg-[#000000] py-3 text-xs font-semibold uppercase tracking-widest text-[#FFFFFF] transition hover:bg-[#272727] disabled:opacity-60">{busy ? 'Signing in…' : 'Sign in'}</button>
   </form>;
 }

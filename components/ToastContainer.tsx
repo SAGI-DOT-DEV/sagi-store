@@ -24,18 +24,18 @@ export function ToastContainer({ toasts, onDismiss }: ToastContainerProps) {
         <div
           key={toast.id}
           role={toast.status === 'error' ? 'alert' : 'status'}
-          className="bg-[#1C1A17] text-[#FAF9F5] border border-[#3E382E] p-4 rounded-sm shadow-xl flex items-start gap-3 pointer-events-auto animate-in slide-in-from-bottom-5 duration-200"
+          className="bg-[#000000] text-[#FFFFFF] border border-[#404040] p-4 rounded-sm shadow-xl flex items-start gap-3 pointer-events-auto animate-in slide-in-from-bottom-5 duration-200"
         >
-          {toast.status === 'loading' ? <LoaderCircle className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5 animate-spin" /> : toast.status === 'error' ? <CircleAlert className="w-4 h-4 text-red-300 shrink-0 mt-0.5" /> : <CheckCircle className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />}
+          {toast.status === 'loading' ? <LoaderCircle className="w-4 h-4 text-[#737373] shrink-0 mt-0.5 animate-spin" /> : toast.status === 'error' ? <CircleAlert className="w-4 h-4 text-neutral-300 shrink-0 mt-0.5" /> : <CheckCircle className="w-4 h-4 text-[#737373] shrink-0 mt-0.5" />}
           <div className="flex-1 text-xs">
             <div className="font-bold">{toast.message}</div>
             {toast.productName && (
-              <div className="text-[#A39B8E] mt-0.5">{toast.productName}</div>
+              <div className="text-[#A2A2A2] mt-0.5">{toast.productName}</div>
             )}
           </div>
           <button
             onClick={() => onDismiss(toast.id)}
-            className="text-[#7A7264] hover:text-[#FAF9F5] p-0.5"
+            className="text-[#535353] hover:text-[#FFFFFF] p-0.5"
             aria-label="Dismiss notification"
           >
             <X className="w-3.5 h-3.5" />

@@ -2,8 +2,8 @@
 @import "./admin/admin.css";
 
 select option {
-  background: #f4f0e7;
-  color: #1c1a17;
+  background: #FFFFFF;
+  color: #000000;
 }
 
 @theme {
@@ -15,8 +15,8 @@ select option {
 @layer base {
   body {
     font-family: var(--font-sans);
-    background-color: #FAF9F5;
-    color: #1C1A17;
+    background-color: #FFFFFF;
+    color: #000000;
   }
 
   h1, h2, h3, h4, .font-serif {
@@ -44,12 +44,12 @@ select option {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF9F5;
+  background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D9D2C5;
+  background: #D4D4D4;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B8AE9C;
+  background: #727272;
 }

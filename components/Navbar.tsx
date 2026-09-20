@@ -19,7 +19,7 @@ export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FAF9F5]/95 backdrop-blur-md border-b border-[#E8E2D5] transition-all duration-200">
+    <header className="sticky top-0 z-40 bg-[#FFFFFF] backdrop-blur-md border-b border-[#E4E4E4] transition-all duration-200">
       {/* Top Announcement Ribbon */}
       <AnnouncementTicker />
 
@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
             <button
               id="mobile-menu-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-[#1C1A17] hover:text-[#5C5549] transition-colors focus:outline-none"
+              className="lg:hidden p-2 text-[#000000] hover:text-[#404040] transition-colors focus:outline-none"
               aria-label="Toggle Menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -43,8 +43,8 @@ export const Navbar: React.FC = () => {
                 onClick={() => setActiveView('products')}
                 className={`transition-colors pb-1 border-b-2 ${
                   activeView === 'products'
-                    ? 'border-[#1C1A17] text-[#1C1A17] font-semibold'
-                    : 'border-transparent text-[#6B6457] hover:text-[#1C1A17]'
+                    ? 'border-[#000000] text-[#000000] font-semibold'
+                    : 'border-transparent text-[#535353] hover:text-[#000000]'
                 }`}
               >
                 The Staples
@@ -54,8 +54,8 @@ export const Navbar: React.FC = () => {
                 onClick={() => setActiveView('journals')}
                 className={`transition-colors pb-1 border-b-2 ${
                   activeView === 'journals'
-                    ? 'border-[#1C1A17] text-[#1C1A17] font-semibold'
-                    : 'border-transparent text-[#6B6457] hover:text-[#1C1A17]'
+                    ? 'border-[#000000] text-[#000000] font-semibold'
+                    : 'border-transparent text-[#535353] hover:text-[#000000]'
                 }`}
               >
                 Kitchen Journals & Masterclasses
@@ -63,7 +63,7 @@ export const Navbar: React.FC = () => {
               <button
                 id="nav-link-provenance"
                 onClick={() => setIsStoryOpen(true)}
-                className="transition-colors pb-1 border-b-2 border-transparent text-[#6B6457] hover:text-[#1C1A17]"
+                className="transition-colors pb-1 border-b-2 border-transparent text-[#535353] hover:text-[#000000]"
               >
                 Provenance
               </button>
@@ -78,37 +78,35 @@ export const Navbar: React.FC = () => {
               className="group flex flex-col items-center justify-center transition-transform duration-200 hover:scale-[1.02]"
             >
               <StoreLogo className="w-28 sm:w-36" />
-              <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#7A7264] font-medium mt-1">
+              <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#535353] font-medium mt-1">
                 Culinary Boutique
               </span>
             </button>
           </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-1 sm:gap-4">
             <div className="hidden md:block"><AccountButton /></div>
             <button
               id="search-trigger-btn"
-              onClick={() => setIsSearchOpen(true)}
-              className="hidden p-2 text-[#4A453C] hover:text-[#1C1A17] transition-colors md:flex items-center gap-1.5"
+              onClick={() => { setMobileMenuOpen(false); setIsSearchOpen(true); }}
+              className="flex h-11 w-11 items-center justify-center rounded-full text-black transition-colors hover:bg-neutral-50 hover:text-neutral-600"
+              aria-label="Search collection"
               title="Search collection"
             >
               <Search className="w-5 h-5" />
-              <span className="hidden md:inline text-xs tracking-wider uppercase font-medium text-[#7A7264]">
-                Search
-              </span>
             </button>
 
             {/* Pantry Bag Button */}
             <button
               id="pantry-drawer-btn"
-              onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center gap-2 bg-[#1C1A17] hover:bg-[#33302B] text-[#FAF9F5] px-4 py-2.5 rounded-full transition-all duration-200 shadow-sm"
+              onClick={() => { setMobileMenuOpen(false); setIsCartOpen(true); }}
+              aria-label={`Open cart, ${cartItemCount} ${cartItemCount === 1 ? 'item' : 'items'}`}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full text-black transition-colors hover:bg-neutral-50 hover:text-neutral-600"
             >
-              <ShoppingBag className="w-4 h-4 text-[#D4AF37]" />
-              <span className="text-xs font-semibold tracking-wider uppercase">Pantry</span>
-              <span className="bg-[#D4AF37] text-[#1C1A17] text-[11px] font-black rounded-full w-5 h-5 flex items-center justify-center">
-                {cartItemCount}
+              <ShoppingBag className="h-6 w-6" />
+              <span aria-hidden="true" className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold text-white ring-2 ring-white">
+                {cartItemCount > 99 ? '99+' : cartItemCount}
               </span>
             </button>
           </div>
@@ -117,13 +115,13 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Navigation Drawer */}
       <AnimatedPanel open={mobileMenuOpen} mode="dropdown">
-        <div className="lg:hidden border-t border-[#E8E2D5] bg-[#FAF9F5] px-6 py-6 space-y-4">
+        <div className="lg:hidden border-t border-[#E4E4E4] bg-[#FFFFFF] px-6 py-6 space-y-4">
           <button
             onClick={() => {
               setActiveView('home');
               setMobileMenuOpen(false);
             }}
-            className="block w-full text-left py-2 font-serif text-xl text-[#1C1A17] font-semibold border-b border-[#EFECE4]"
+            className="block w-full text-left py-2 font-serif text-xl text-[#000000] font-semibold border-b border-[#F4F4F4]"
           >
             Home Overview
           </button>
@@ -132,10 +130,10 @@ export const Navbar: React.FC = () => {
               setActiveView('products');
               setMobileMenuOpen(false);
             }}
-            className="flex items-center justify-between w-full text-left py-2 text-sm tracking-wider uppercase font-medium text-[#4A453C] border-b border-[#EFECE4]"
+            className="flex items-center justify-between w-full text-left py-2 text-sm tracking-wider uppercase font-medium text-[#404040] border-b border-[#F4F4F4]"
           >
             <span className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-[#D4AF37]" /> The Staples Collection
+              <Layers className="w-4 h-4 text-[#737373]" /> The Staples Collection
             </span>
             <ArrowRight className="w-4 h-4 text-[#999]" />
           </button>
@@ -144,10 +142,10 @@ export const Navbar: React.FC = () => {
               setActiveView('journals');
               setMobileMenuOpen(false);
             }}
-            className="flex items-center justify-between w-full text-left py-2 text-sm tracking-wider uppercase font-medium text-[#4A453C] border-b border-[#EFECE4]"
+            className="flex items-center justify-between w-full text-left py-2 text-sm tracking-wider uppercase font-medium text-[#404040] border-b border-[#F4F4F4]"
           >
             <span className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-[#D4AF37]" /> Masterclasses & Kitchen Journals
+              <BookOpen className="w-4 h-4 text-[#737373]" /> Masterclasses & Kitchen Journals
             </span>
             <ArrowRight className="w-4 h-4 text-[#999]" />
           </button>
@@ -156,28 +154,19 @@ export const Navbar: React.FC = () => {
               setIsStoryOpen(true);
               setMobileMenuOpen(false);
             }}
-            className="flex items-center justify-between w-full text-left py-2 text-sm tracking-wider uppercase font-medium text-[#4A453C] border-b border-[#EFECE4]"
+            className="flex items-center justify-between w-full text-left py-2 text-sm tracking-wider uppercase font-medium text-[#404040] border-b border-[#F4F4F4]"
           >
             <span className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-[#D4AF37]" /> Agricultural Provenance
+              <Globe className="w-4 h-4 text-[#737373]" /> Agricultural Provenance
             </span>
             <ArrowRight className="w-4 h-4 text-[#999]" />
           </button>
 
-          <div className="space-y-3 border-b border-[#EFECE4] py-3">
-            <button
-              onClick={() => {
-                setIsSearchOpen(true);
-                setMobileMenuOpen(false);
-              }}
-              className="flex w-full items-center gap-2 py-2 text-left text-sm tracking-wider uppercase font-medium text-[#4A453C]"
-            >
-              <Search className="h-4 w-4 text-[#D4AF37]" /> Search collection
-            </button>
+          <div className="space-y-3 border-b border-[#F4F4F4] py-3">
             <div className="py-2"><AccountButton /></div>
           </div>
 
-          <div className="pt-2 flex items-center justify-between text-xs text-[#7A7264]">
+          <div className="pt-2 flex items-center justify-between text-xs text-[#535353]">
             <span>Canada</span>
             <span>Est. 2026</span>
           </div>

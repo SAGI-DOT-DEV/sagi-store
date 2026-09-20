@@ -144,12 +144,12 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
   };
 
   return <div className="mx-auto max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
-    <button type="button" onClick={() => setActiveView('products')} className="text-sm text-[#7A7264]">← Continue shopping</button>
-    <h1 className="font-serif text-3xl text-[#1C1A17]">Checkout</h1>
+    <button type="button" onClick={() => setActiveView('products')} className="text-sm text-[#535353]">← Continue shopping</button>
+    <h1 className="font-serif text-3xl text-[#000000]">Checkout</h1>
     <div className="grid items-start gap-10 lg:grid-cols-12">
       <div className="space-y-8 lg:col-span-7">
         {authLoading ? <p role="status">Loading your account…</p> : !user ? (
-          <button type="button" onClick={() => setAuthModalOpen(true)} className="rounded bg-[#1C1A17] px-6 py-3 text-[#FAF9F5]">Sign in to select a delivery address</button>
+          <button type="button" onClick={() => setAuthModalOpen(true)} className="rounded bg-[#000000] px-6 py-3 text-[#FFFFFF]">Sign in to select a delivery address</button>
         ) : <>
           <CheckoutContactCard user={user} address={resumeOrder ? undefined : address} />
           {!resumeOrder && !restoring && <section className="space-y-4">
@@ -160,7 +160,7 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
                   {item.label || 'Address'}{item.isDefault ? ' (Default)' : ''} — {item.line1}, {item.city}, {item.country}
                 </option>)}
               </AuthSelect>
-              <address className="rounded-lg bg-[#F3EFE6] p-4 text-sm not-italic leading-6 text-[#6B6457]">
+              <address className="rounded-lg bg-[#FFFFFF] p-4 text-sm not-italic leading-6 text-[#535353]">
                 {address.line1}<br />{address.line2 && <>{address.line2}<br /></>}
                 {address.city}, {address.state} {address.postalCode}<br />{address.country}
               </address>
@@ -170,19 +170,19 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
             </button>}
           </section>}
         </>}
-        {restoring && <p role="status" className="text-sm text-[#7A7264]">Restoring your order...</p>}
-        {restoreError && <div role="alert" className="text-sm text-red-700"><p>{restoreError}</p><button onClick={() => setRestoreAttempt(value => value + 1)} className="mt-2 underline">Retry restoring order</button></div>}
-        {resumeOrder && !restoring && !restoreError && <div className="space-y-3 rounded-lg border border-[#E8E2D5] bg-[#F3EFE6] p-5">
+        {restoring && <p role="status" className="text-sm text-[#535353]">Restoring your order...</p>}
+        {restoreError && <div role="alert" className="text-sm text-neutral-700"><p>{restoreError}</p><button onClick={() => setRestoreAttempt(value => value + 1)} className="mt-2 underline">Retry restoring order</button></div>}
+        {resumeOrder && !restoring && !restoreError && <div className="space-y-3 rounded-lg border border-[#E4E4E4] bg-[#FFFFFF] p-5">
           <h2 className="font-serif text-xl">{canResume ? 'Your order is saved' : 'Order status updated'}</h2>
-          <p className="text-sm text-[#7A7264]">{canResume ? 'Continue payment for this order. Your selected shipping service and order total have been preserved.' : 'This order is no longer awaiting payment. You do not need to pay for it again here.'}</p>
+          <p className="text-sm text-[#535353]">{canResume ? 'Continue payment for this order. Your selected shipping service and order total have been preserved.' : 'This order is no longer awaiting payment. You do not need to pay for it again here.'}</p>
           <Link href="/purchase-history" className="inline-block text-sm underline">View purchase history</Link>
           <Link href="/checkout" className="block text-sm underline" onClick={() => { window.sessionStorage.removeItem(pendingCheckoutKey(user!.id)); setPendingOrder(null); }}>Checkout current cart instead</Link>
         </div>}
-        {!cart.length && !resumeOrder && !restoring && !restoreError && <p className="text-sm text-[#7A7264]">Your cart is empty. Add products to calculate shipping.</p>}
+        {!cart.length && !resumeOrder && !restoring && !restoreError && <p className="text-sm text-[#535353]">Your cart is empty. Add products to calculate shipping.</p>}
         {addingToCartKey && <p role="status" className="text-sm">Updating your cart before calculating shipping…</p>}
-        {loading && <div role="status" className="space-y-3"><p className="text-sm">Calculating shipping rates…</p>{[0, 1, 2].map((i) => <div key={i} className="h-20 animate-pulse rounded-lg bg-[#EFECE4]" />)}</div>}
-        {current?.error && <div role="alert" className="space-y-3 text-sm text-red-700"><p>{current.error}</p><button type="button" onClick={() => setRetry((value) => value + 1)} className="underline">Retry shipping rates</button></div>}
-        {quote && !rates.length && <div className="space-y-2 text-sm text-[#7A7264]">
+        {loading && <div role="status" className="space-y-3"><p className="text-sm">Calculating shipping rates…</p>{[0, 1, 2].map((i) => <div key={i} className="h-20 animate-pulse rounded-lg bg-[#F4F4F4]" />)}</div>}
+        {current?.error && <div role="alert" className="space-y-3 text-sm text-neutral-700"><p>{current.error}</p><button type="button" onClick={() => setRetry((value) => value + 1)} className="underline">Retry shipping rates</button></div>}
+        {quote && !rates.length && <div className="space-y-2 text-sm text-[#535353]">
           <p>{quote.rates.length ? 'No shipping rates are available in the store currency for this address.' : 'No shipping services are available for this address. Try another saved address.'}</p>
           <button type="button" onClick={() => setRetry((value) => value + 1)} className="underline">Refresh rates</button>
         </div>}
@@ -190,32 +190,32 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
           <button type="button" onClick={() => setRetry((value) => value + 1)} className="text-xs underline">Refresh shipping rates</button></fieldset>}
         {!restoring && !restoreError && (rate || canResume) && <div className="space-y-3">
           <button type="button" onClick={() => void startCheckout()} disabled={checkoutBusy || !accessToken || (!resumeOrder && !ready)}
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#1C1A17] px-6 py-4 text-sm font-semibold text-[#FAF9F5] disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#000000] px-6 py-4 text-sm font-semibold text-[#FFFFFF] disabled:opacity-60"
             aria-busy={checkoutBusy}>
             {checkoutBusy && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {checkoutBusy ? 'Opening secure checkout…' : resumeOrder ? 'Continue payment' : 'Continue to secure checkout'}
           </button>
-          {resumeOrder && <p className="text-xs text-[#7A7264]">Your order has been created. Retry to pay for this same order.</p>}
+          {resumeOrder && <p className="text-xs text-[#535353]">Your order has been created. Retry to pay for this same order.</p>}
         </div>}
-        {checkoutError && <p role="alert" className="text-sm text-red-700">{checkoutError}</p>}
+        {checkoutError && <p role="alert" className="text-sm text-neutral-700">{checkoutError}</p>}
       </div>
-      <aside className="space-y-5 rounded-lg border border-[#E8E2D5] bg-[#FAF9F5] p-6 lg:col-span-5">
+      <aside className="space-y-5 rounded-lg border border-[#E4E4E4] bg-[#FFFFFF] p-6 lg:col-span-5">
         <h2 className="font-serif text-xl">Order summary</h2>
-        {restoring ? <p role="status">Loading saved order...</p> : restoreError ? <p className="text-sm text-[#7A7264]">Order details temporarily unavailable.</p> : resumeOrder ? <SavedOrderSummary order={resumeOrder.order} /> : <>
+        {restoring ? <p role="status">Loading saved order...</p> : restoreError ? <p className="text-sm text-[#535353]">Order details temporarily unavailable.</p> : resumeOrder ? <SavedOrderSummary order={resumeOrder.order} /> : <>
         <div className="max-h-80 space-y-4 overflow-y-auto">
-          {!cart.length && <p className="py-4 text-sm text-[#7A7264]">Your bag is empty. <Link href="/products" className="underline underline-offset-4">Explore the collection</Link></p>}
+          {!cart.length && <p className="py-4 text-sm text-[#535353]">Your bag is empty. <Link href="/products" className="underline underline-offset-4">Explore the collection</Link></p>}
           {cart.map((item) => <div key={item.variantId || item.product.id} className="flex items-center gap-3">
             <img src={item.product.image || '/product-placeholder.svg'} alt={item.product.name} className="h-14 w-14 rounded object-cover" />
-            <div className="flex-1 text-sm"><p>{item.product.name}</p><p className="text-xs text-[#7A7264]">{item.selectedWeight} × {item.quantity}</p></div>
+            <div className="flex-1 text-sm"><p>{item.product.name}</p><p className="text-xs text-[#535353]">{item.selectedWeight} × {item.quantity}</p></div>
             <span className="text-xs">{money(item.unitPrice * item.quantity)}</span>
           </div>)}
         </div>
-        <dl className="space-y-3 border-t border-[#E8E2D5] pt-4 text-sm">
+        <dl className="space-y-3 border-t border-[#E4E4E4] pt-4 text-sm">
           <div className="flex justify-between"><dt>Subtotal</dt><dd>{money(subtotal)}</dd></div>
-          <div className="flex justify-between gap-4"><dt>Shipping</dt><dd className="text-right text-[#7A7264]">{rate ? money(Number(rate.amount)) : loading ? 'Calculating…' : !address ? 'Add an address to calculate' : 'Select a shipping rate'}</dd></div>
-          <div className="flex justify-between border-t border-[#E8E2D5] pt-4 font-semibold"><dt>{rate ? 'Estimated total' : 'Total before shipping'}</dt><dd>{money((Math.round(subtotal * 100) + (rate ? Math.round(Number(rate.amount) * 100) : 0)) / 100)}</dd></div>
+          <div className="flex justify-between gap-4"><dt>Shipping</dt><dd className="text-right text-[#535353]">{rate ? money(Number(rate.amount)) : loading ? 'Calculating…' : !address ? 'Add an address to calculate' : 'Select a shipping rate'}</dd></div>
+          <div className="flex justify-between border-t border-[#E4E4E4] pt-4 font-semibold"><dt>{rate ? 'Estimated total' : 'Total before shipping'}</dt><dd>{money((Math.round(subtotal * 100) + (rate ? Math.round(Number(rate.amount) * 100) : 0)) / 100)}</dd></div>
         </dl>
-        <p className="text-xs leading-5 text-[#7A7264]">{rate ? 'This is a shipping estimate. No payment has been taken.' : 'Shipping is not included yet. Select a delivery address and shipping rate to confirm your final total.'}</p>
+        <p className="text-xs leading-5 text-[#535353]">{rate ? 'This is a shipping estimate. No payment has been taken.' : 'Shipping is not included yet. Select a delivery address and shipping rate to confirm your final total.'}</p>
         </>}
       </aside>
     </div>

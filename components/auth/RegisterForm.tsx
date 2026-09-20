@@ -26,13 +26,13 @@ export function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
     }
     catch (error) { setMessage(error instanceof Error ? error.message : 'Unable to create your account'); } finally { setBusy(false); }
   };
-  if (sent) return <div className="space-y-4"><p role="status" className="rounded-md bg-[#F1EEE6] px-3 py-3 text-sm text-[#5C5549]">{message}</p><button onClick={onSuccess} className="w-full rounded-full bg-[#1C1A17] py-3 text-xs font-semibold uppercase tracking-widest text-[#FAF9F5]">Back to sign in</button><button onClick={()=>{setSent(false);setDeliveryFailed(true);}} className="w-full text-xs underline">Email not received? Retry verification</button></div>;
+  if (sent) return <div className="space-y-4"><p role="status" className="rounded-md bg-[#F4F4F4] px-3 py-3 text-sm text-[#404040]">{message}</p><button onClick={onSuccess} className="w-full rounded-full bg-[#000000] py-3 text-xs font-semibold uppercase tracking-widest text-[#FFFFFF]">Back to sign in</button><button onClick={()=>{setSent(false);setDeliveryFailed(true);}} className="w-full text-xs underline">Email not received? Retry verification</button></div>;
   return <form onSubmit={submit} className="space-y-4">
     <div className="grid grid-cols-2 gap-3"><AuthField label="First name" value={values.firstName} onChange={(e) => update('firstName', e.target.value)} error={errors.firstName} /><AuthField label="Last name" value={values.lastName} onChange={(e) => update('lastName', e.target.value)} error={errors.lastName} /></div>
     <AuthField label="Email address" type="email" autoComplete="email" value={values.email} onChange={(e) => update('email', e.target.value)} error={errors.email} />
     <AuthField label="Password" type="password" autoComplete="new-password" value={values.password} onChange={(e) => update('password', e.target.value)} error={errors.password} />
     <AuthField label="Confirm password" type="password" autoComplete="new-password" value={values.confirmPassword} onChange={(e) => update('confirmPassword', e.target.value)} error={errors.confirmPassword} />
-    {message && <p role="status" className="rounded-md bg-[#F1EEE6] px-3 py-2 text-xs text-[#5C5549]">{message}</p>}
-    <button disabled={busy} className="w-full rounded-full bg-[#1C1A17] py-3 text-xs font-semibold uppercase tracking-widest text-[#FAF9F5] transition hover:bg-[#33302B] disabled:opacity-60">{busy ? 'Creating account…' : deliveryFailed ? 'Retry verification email' : 'Create account'}</button>
+    {message && <p role="status" className="rounded-md bg-[#F4F4F4] px-3 py-2 text-xs text-[#404040]">{message}</p>}
+    <button disabled={busy} className="w-full rounded-full bg-[#000000] py-3 text-xs font-semibold uppercase tracking-widest text-[#FFFFFF] transition hover:bg-[#272727] disabled:opacity-60">{busy ? 'Creating account…' : deliveryFailed ? 'Retry verification email' : 'Create account'}</button>
   </form>;
 }

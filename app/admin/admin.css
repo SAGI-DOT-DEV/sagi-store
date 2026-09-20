@@ -1,51 +1,51 @@
 @theme {
-  --color-admin-tertiary-fixed-dim: #cac6c3;
-  --color-admin-primary-fixed-dim: #c8c6c5;
-  --color-admin-on-secondary-fixed: #241a00;
-  --color-admin-surface-container-highest: #e2e2e2;
-  --color-admin-surface-bright: #f9f9f9;
-  --color-admin-surface-dim: #dadada;
-  --color-admin-surface-tint: #5f5e5e;
-  --color-admin-on-tertiary: #ffffff;
-  --color-admin-on-surface-variant: #444748;
-  --color-admin-surface-container-lowest: #ffffff;
-  --color-admin-on-tertiary-fixed-variant: #484645;
-  --color-admin-on-secondary-fixed-variant: #574500;
+  --color-admin-tertiary-fixed-dim: #C7C7C7;
+  --color-admin-primary-fixed-dim: #C6C6C6;
+  --color-admin-on-secondary-fixed: #252525;
+  --color-admin-surface-container-highest: #E2E2E2;
+  --color-admin-surface-bright: #FFFFFF;
+  --color-admin-surface-dim: #DADADA;
+  --color-admin-surface-tint: #5E5E5E;
+  --color-admin-on-tertiary: #FFFFFF;
+  --color-admin-on-surface-variant: #464646;
+  --color-admin-surface-container-lowest: #FFFFFF;
+  --color-admin-on-tertiary-fixed-variant: #464646;
+  --color-admin-on-secondary-fixed-variant: #3A3A3A;
   --color-admin-tertiary: #000000;
-  --color-admin-surface: #f9f9f9;
-  --color-admin-secondary-fixed-dim: #e9c349;
-  --color-admin-surface-container-low: #f3f3f4;
-  --color-admin-surface-container: #eeeeee;
-  --color-admin-background: #f9f9f9;
-  --color-admin-on-background: #1a1c1c;
-  --color-admin-secondary-fixed: #ffe088;
-  --color-admin-on-primary-container: #858383;
-  --color-admin-inverse-surface: #2f3131;
-  --color-admin-on-error-container: #93000a;
-  --color-admin-on-tertiary-fixed: #1c1b1a;
-  --color-admin-error-container: #ffdad6;
-  --color-admin-primary-container: #1c1b1b;
-  --color-admin-inverse-on-surface: #f0f1f1;
-  --color-admin-inverse-primary: #c8c6c5;
-  --color-admin-on-secondary: #ffffff;
-  --color-admin-surface-container-high: #e8e8e8;
-  --color-admin-on-primary-fixed-variant: #474646;
-  --color-admin-tertiary-container: #1c1b1a;
-  --color-admin-on-primary: #ffffff;
-  --color-admin-outline: #747878;
-  --color-admin-on-tertiary-container: #868381;
-  --color-admin-error: #ba1a1a;
-  --color-admin-on-primary-fixed: #1c1b1b;
-  --color-admin-outline-variant: #c4c7c7;
-  --color-admin-primary-fixed: #e5e2e1;
+  --color-admin-surface: #FFFFFF;
+  --color-admin-secondary-fixed-dim: #BEBEBE;
+  --color-admin-surface-container-low: #F3F3F3;
+  --color-admin-surface-container: #EEEEEE;
+  --color-admin-background: #FFFFFF;
+  --color-admin-on-background: #1C1C1C;
+  --color-admin-secondary-fixed: #E8E8E8;
+  --color-admin-on-primary-container: #838383;
+  --color-admin-inverse-surface: #313131;
+  --color-admin-on-error-container: #202020;
+  --color-admin-on-tertiary-fixed: #1B1B1B;
+  --color-admin-error-container: #E2E2E2;
+  --color-admin-primary-container: #1B1B1B;
+  --color-admin-inverse-on-surface: #F1F1F1;
+  --color-admin-inverse-primary: #C6C6C6;
+  --color-admin-on-secondary: #FFFFFF;
+  --color-admin-surface-container-high: #E8E8E8;
+  --color-admin-on-primary-fixed-variant: #464646;
+  --color-admin-tertiary-container: #1B1B1B;
+  --color-admin-on-primary: #FFFFFF;
+  --color-admin-outline: #777777;
+  --color-admin-on-tertiary-container: #838383;
+  --color-admin-error: #3C3C3C;
+  --color-admin-on-primary-fixed: #1B1B1B;
+  --color-admin-outline-variant: #C6C6C6;
+  --color-admin-primary-fixed: #E3E3E3;
   --color-admin-primary: #000000;
-  --color-admin-on-surface: #1a1c1c;
-  --color-admin-surface-variant: #e2e2e2;
-  --color-admin-on-error: #ffffff;
-  --color-admin-on-secondary-container: #745c00;
-  --color-admin-tertiary-fixed: #e6e1df;
-  --color-admin-secondary-container: #fed65b;
-  --color-admin-secondary: #735c00;
+  --color-admin-on-surface: #1C1C1C;
+  --color-admin-surface-variant: #E2E2E2;
+  --color-admin-on-error: #FFFFFF;
+  --color-admin-on-secondary-container: #4E4E4E;
+  --color-admin-tertiary-fixed: #E2E2E2;
+  --color-admin-secondary-container: #E8E8E8;
+  --color-admin-secondary: #4E4E4E;
   --spacing-admin-gutter: 24px;
   --spacing-admin-unit: 4px;
   --spacing-admin-section-gap: 120px;
@@ -66,12 +66,12 @@
   --text-admin-headline-lg-mobile: 32px;
   --text-admin-headline-lg-mobile--line-height: 1.2;
 }
-.admin-suite { background:#f9f9f9; color:#1a1c1c; min-height:100vh; }
-.admin-suite .sagi-input { border:0; border-bottom:1px solid #c4c7c7; background:transparent; border-radius:0; padding-inline:0; }
+.admin-suite { background:#FFFFFF; color:#1C1C1C; min-height:100vh; }
+.admin-suite .sagi-input { border:0; border-bottom:1px solid #C6C6C6; background:transparent; border-radius:0; padding-inline:0; }
 .admin-suite .sagi-input:focus { outline:0; border-bottom-color:#121212; }
-.admin-suite .glass-card { background:rgba(255,255,255,.7); backdrop-filter:blur(10px); border:1px solid #c4c7c7; }
+.admin-suite .glass-card { background:#FFFFFF; backdrop-filter:blur(10px); border:1px solid #C6C6C6; }
 .admin-suite .glass-card.bg-admin-primary { background:#000; }
 .admin-suite .bento-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:24px; }
 .admin-suite button:disabled { opacity:.45; cursor:not-allowed; }
-.admin-suite :focus-visible { outline:2px solid #735c00; outline-offset:4px; }
-.admin-suite select option { background:#f9f9f9; color:#1a1c1c; }
+.admin-suite :focus-visible { outline:2px solid #4E4E4E; outline-offset:4px; }
+.admin-suite select option { background:#FFFFFF; color:#1C1C1C; }

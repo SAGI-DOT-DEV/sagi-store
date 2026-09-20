@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import styles from './Confetti.module.css';
 
-const colors = ['#D4AF37', '#8C7B5A', '#56704B', '#E8D9AF', '#1C1A17'];
+const colors = ['#000000', '#404040', '#737373', '#D9D9D9', '#FFFFFF'];
 
 /** A single, decorative celebration. Mount only after a confirmed success. */
 export function Confetti() {

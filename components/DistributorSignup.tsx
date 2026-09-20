@@ -52,24 +52,24 @@ export function DistributorSignup() {
 
   return <section id="distributor-signup" tabIndex={-1} className="lg:col-span-5 space-y-6 scroll-mt-28 focus:outline-none" aria-labelledby="distributor-heading">
     <div className="space-y-2">
-      <span className="text-[10px] tracking-[0.3em] uppercase text-[#D4AF37] font-semibold">Become a distributor</span>
-      <h3 id="distributor-heading" className="font-serif text-2xl sm:text-3xl text-[#FAF9F5] leading-snug">Bring SAGI to your community.</h3>
-      <p className="text-xs text-[#9E978A] leading-relaxed max-w-md">Interested in distributing our products? Register your contact details to express your interest in becoming a SAGI distributor.</p>
+      <span className="text-[10px] tracking-[0.3em] uppercase text-[#BEBEBE] font-semibold">Become a distributor</span>
+      <h3 id="distributor-heading" className="font-serif text-2xl sm:text-3xl text-[#FFFFFF] leading-snug">Bring SAGI to your community.</h3>
+      <p className="text-xs text-[#A2A2A2] leading-relaxed max-w-md">Interested in distributing our products? Register your contact details to express your interest in becoming a SAGI distributor.</p>
     </div>
-    {complete ? <div role="status" className="flex items-start gap-3 rounded-lg border border-[#3E382E] bg-[#24211D] p-4 text-sm text-[#E2D8C7]">
-      <CheckCircle2 className="h-5 w-5 shrink-0 text-[#D4AF37]" aria-hidden="true" />
+    {complete ? <div role="status" className="flex items-start gap-3 rounded-lg border border-[#404040] bg-[#181818] p-4 text-sm text-[#D9D9D9]">
+      <CheckCircle2 className="h-5 w-5 shrink-0 text-[#BEBEBE]" aria-hidden="true" />
       <p>Thank you for your interest. Your distributor registration has been received.</p>
     </div> : <form onSubmit={submit} noValidate className="max-w-md space-y-4">
       <fieldset disabled={pending} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <legend className="sr-only">Distributor contact details</legend>
         {fields.map((field) => <label key={field.name} className="block space-y-2">
-          <span className="text-xs text-[#C5BDAE]">{field.label}</span>
-          <input {...field} required value={values[field.name]} onChange={(event) => setValues({ ...values, [field.name]: event.target.value })} aria-invalid={Boolean(errors[field.name])} aria-describedby={errors[field.name] ? 'distributor-' + field.name + '-error' : undefined} className="w-full rounded-sm border border-[#36322A] bg-[#1D1B18] px-3 py-3 text-sm text-[#FAF9F5] outline-none focus:border-[#D4AF37] disabled:opacity-60" />
-          {errors[field.name] && <span id={'distributor-' + field.name + '-error'} className="block text-xs text-red-300">{errors[field.name]}</span>}
+          <span className="text-xs text-[#BEBEBE]">{field.label}</span>
+          <input {...field} required value={values[field.name]} onChange={(event) => setValues({ ...values, [field.name]: event.target.value })} aria-invalid={Boolean(errors[field.name])} aria-describedby={errors[field.name] ? 'distributor-' + field.name + '-error' : undefined} className="w-full rounded-sm border border-[#272727] bg-[#1B1B1B] px-3 py-3 text-sm text-[#FFFFFF] outline-none focus:border-[#737373] disabled:opacity-60" />
+          {errors[field.name] && <span id={'distributor-' + field.name + '-error'} className="block text-xs text-neutral-300">{errors[field.name]}</span>}
         </label>)}
       </fieldset>
-      {error && <p role="alert" className="text-sm text-red-300">{error}</p>}
-      <button type="submit" disabled={pending} className="flex items-center justify-center gap-2 bg-[#D4AF37] px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#141311] transition-colors hover:bg-[#C29D2C] disabled:opacity-60">
+      {error && <p role="alert" className="text-sm text-neutral-300">{error}</p>}
+      <button type="submit" disabled={pending} className="flex items-center justify-center gap-2 bg-neutral-300 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-neutral-200 disabled:opacity-60">
         {pending ? <><Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />Submitting...</> : <>Sign up as a distributor<ArrowRight aria-hidden="true" className="h-4 w-4" /></>}
       </button>
     </form>}

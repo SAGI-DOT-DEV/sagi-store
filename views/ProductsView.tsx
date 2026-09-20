@@ -79,14 +79,14 @@ export const ProductsView: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
       {/* Header Banner */}
       <div className="space-y-4 max-w-2xl">
-        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">
+        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#737373]">
           {/* <Sparkles className="w-3.5 h-3.5" /> */}
           <span>The Staples Catalog</span>
         </div>
-        <h1 className="font-serif text-3xl sm:text-5xl font-normal text-[#1C1A17] tracking-tight">
+        <h1 className="font-serif text-3xl sm:text-5xl font-normal text-[#000000] tracking-tight">
           Provisions of the Highest Order
         </h1>
-        <p className="text-xs sm:text-sm text-[#6B6457] leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#535353] leading-relaxed">
           Single-origin grains, slow-fermented cassava, cold-pressed oils, and
           sun-dried flours sourced directly from Nigeria's historic agrarian
           estates.
@@ -94,7 +94,7 @@ export const ProductsView: React.FC = () => {
       </div>
 
       {/* Filter and Sort Toolbar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E8E2D5]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E4E4E4]">
         {/* Categories Chips */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
           {isLoading ? (
@@ -106,8 +106,8 @@ export const ProductsView: React.FC = () => {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap ${
                   selectedCategory === cat
-                    ? "bg-[#1C1A17] text-[#FAF9F5] shadow-sm"
-                    : "bg-[#EFECE4] text-[#5C5549] hover:bg-[#E5DFC9] hover:text-[#1C1A17]"
+                    ? "bg-[#000000] text-[#FFFFFF] shadow-sm"
+                    : "bg-[#F4F4F4] text-[#404040] hover:bg-[#E4E4E4] hover:text-[#000000]"
                 }`}
               >
                 {cat === "All" ? "All Staples" : cat}
@@ -118,20 +118,20 @@ export const ProductsView: React.FC = () => {
 
         {/* Sort and Count */}
         <div className="flex items-center justify-between md:justify-end gap-4 text-xs">
-          <span className="text-[#8C8475] font-medium">
+          <span className="text-[#727272] font-medium">
             Showing{" "}
-            <strong className="text-[#1C1A17]">
+            <strong className="text-[#000000]">
               {filteredProducts.length}
             </strong>{" "}
             provisions
           </span>
 
-          <div className="flex items-center gap-2 bg-[#FAF9F5] border border-[#D9D2C5] px-3 py-1.5 rounded-sm">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[#7A7264]" />
+          <div className="flex items-center gap-2 bg-[#FFFFFF] border border-[#D4D4D4] px-3 py-1.5 rounded-sm">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#535353]" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-transparent text-xs text-[#1C1A17] font-medium focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs text-[#000000] font-medium focus:outline-none cursor-pointer"
             >
               <option value="featured">Featured Curations</option>
               <option value="price-asc">Price: Low to High</option>
@@ -149,7 +149,7 @@ export const ProductsView: React.FC = () => {
         </span>
       )}
       {loadError && (
-        <p className="border border-[#D9D2C5] bg-[#EFECE4] p-4 text-sm text-[#5C5549]">
+        <p className="border border-[#D4D4D4] bg-[#F4F4F4] p-4 text-sm text-[#404040]">
           {loadError}
         </p>
       )}
@@ -161,12 +161,12 @@ export const ProductsView: React.FC = () => {
           : filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-[#FAF9F5] border border-[#E8E2D5] rounded-sm overflow-hidden flex flex-col group hover:shadow-md hover:border-[#D4AF37]/50 transition-all duration-300"
+                className="bg-[#FFFFFF] border border-[#E4E4E4] rounded-sm overflow-hidden flex flex-col group hover:shadow-md hover:border-[#737373]/50 transition-all duration-300"
               >
                 {/* Image Box */}
                 <div
                   onClick={() => navigateToProduct(product.slug ?? product.id)}
-                  className="relative aspect-square bg-[#EFECE4] overflow-hidden cursor-pointer"
+                  className="relative aspect-square bg-[#F4F4F4] overflow-hidden cursor-pointer"
                 >
                   <img
                     src={product.image || "/product-placeholder.svg"}
@@ -176,13 +176,13 @@ export const ProductsView: React.FC = () => {
                   />
 
                   {product.badge && (
-                    <span className="absolute top-3 left-3 bg-[#1C1A17]/95 text-[#FAF9F5] text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-sm shadow-sm backdrop-blur-sm">
+                    <span className="absolute top-3 left-3 bg-[#000000]/95 text-[#FFFFFF] text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-sm shadow-sm backdrop-blur-sm">
                       {product.badge}
                     </span>
                   )}
 
                   {product.moistureContent && (
-                    <span className="absolute top-3 right-3 bg-[#FAF9F5]/90 text-[#4A453C] text-[10px] font-bold px-2 py-0.5 rounded-sm backdrop-blur-sm">
+                    <span className="absolute top-3 right-3 bg-[#FFFFFF] text-[#404040] text-[10px] font-bold px-2 py-0.5 rounded-sm backdrop-blur-sm">
                       {product.moistureContent} Moisture
                     </span>
                   )}
@@ -191,19 +191,19 @@ export const ProductsView: React.FC = () => {
                 {/* Content Box */}
                 <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-1.5">
-                    {(product.origin || product.category) && <div className="flex items-center justify-between gap-2 text-[10px] uppercase font-semibold text-[#8C8475] tracking-wider">
+                    {(product.origin || product.category) && <div className="flex items-center justify-between gap-2 text-[10px] uppercase font-semibold text-[#727272] tracking-wider">
                       {product.origin && <span>{product.origin}</span>}
-                      {product.category && <span className="text-[#D4AF37] font-bold">{product.category}</span>}
+                      {product.category && <span className="text-[#737373] font-bold">{product.category}</span>}
                     </div>}
                     <h3
                       onClick={() =>
                         navigateToProduct(product.slug ?? product.id)
                       }
-                      className="font-serif text-xl font-bold text-[#1C1A17] group-hover:text-[#5C5549] cursor-pointer leading-snug"
+                      className="font-serif text-xl font-bold text-[#000000] group-hover:text-[#404040] cursor-pointer leading-snug"
                     >
                       {product.name}
                     </h3>
-                    <p className="text-xs text-[#7A7264] line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#535353] line-clamp-2 leading-relaxed">
                       {product.description}
                     </p>
 
@@ -212,7 +212,7 @@ export const ProductsView: React.FC = () => {
                       {(product.highlights ?? []).slice(0, 2).map((note, i) => (
                         <span
                           key={i}
-                          className="text-[10px] bg-[#EFECE4] text-[#5C5549] px-2 py-0.5 rounded-sm"
+                          className="text-[10px] bg-[#F4F4F4] text-[#404040] px-2 py-0.5 rounded-sm"
                         >
                           {note}
                         </span>
@@ -221,12 +221,12 @@ export const ProductsView: React.FC = () => {
                   </div>
 
                   {/* Price & Action Row */}
-                  <div className="pt-4 border-t border-[#EAE4D7] flex items-center justify-between">
+                  <div className="pt-4 border-t border-[#E4E4E4] flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] text-[#8C8475] block uppercase tracking-wider">
+                      <span className="text-[10px] text-[#727272] block uppercase tracking-wider">
                         {product.availableSizes[0]?.weight || 'Standard'}
                       </span>
-                      <span className="font-serif text-lg font-bold text-[#1C1A17]">
+                      <span className="font-serif text-lg font-bold text-[#000000]">
                         {product.priceFormatted}
                       </span>
                     </div>
@@ -236,7 +236,7 @@ export const ProductsView: React.FC = () => {
                         onClick={() =>
                           navigateToProduct(product.slug ?? product.id)
                         }
-                        className="text-xs text-[#4A453C] hover:text-[#1C1A17] font-semibold underline underline-offset-4 px-2"
+                        className="text-xs text-[#404040] hover:text-[#000000] font-semibold underline underline-offset-4 px-2"
                       >
                         Specs
                       </button>
@@ -247,13 +247,13 @@ export const ProductsView: React.FC = () => {
                           addingToCartKey ===
                           `${product.id}:${product.availableSizes[0]?.weight || "1 KG Jar"}`
                         }
-                        className="bg-[#1C1A17] hover:bg-[#36322A] text-[#FAF9F5] px-4 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm disabled:cursor-not-allowed disabled:bg-[#EFECE4] disabled:text-[#7A7264] disabled:shadow-none"
+                        className="bg-[#000000] hover:bg-[#272727] text-[#FFFFFF] px-4 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm disabled:cursor-not-allowed disabled:bg-[#F4F4F4] disabled:text-[#535353] disabled:shadow-none"
                       >
                         {addingToCartKey ===
                         `${product.id}:${product.availableSizes[0]?.weight || "1 KG Jar"}` ? (
-                          <LoaderCircle className="w-3.5 h-3.5 animate-spin text-[#D4AF37]" />
+                          <LoaderCircle className="w-3.5 h-3.5 animate-spin text-[#737373]" />
                         ) : !isOutOfStock(product) ? (
-                          <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />
+                          <Plus className="w-3.5 h-3.5 text-[#737373]" />
                         ) : null}
                         <span>{isOutOfStock(product) ? 'Out of stock' : 'Add to Bag'}</span>
                       </button>
