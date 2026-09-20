@@ -19,7 +19,7 @@ const REGION_OPTIONS: Record<string, string[]> = {
 };
 
 export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { user, addAddress, updateAddress, logout } = useAuth();
+  const { user, addAddress, updateAddress, requestSignOut } = useAuth();
   const { showToast, dismissToast } = useCart();
   const [showForm, setShowForm] = useState(false);
   const [values, setValues] = useState<AddressInput>({ phone: '', phone2: '', label: 'Home', line1: '', line2: '', city: '', state: '', country: 'NG', postalCode: '', isDefault: false });
@@ -43,6 +43,6 @@ export function ProfileModal({ open, onClose }: { open: boolean; onClose: () => 
           <span className="font-serif text-xl">Purchase history</span><span className="text-xs text-[#8C7B5A]">View orders &rarr;</span>
         </Link>
       </section>
-      <button onClick={() => void logout().then(onClose)} className="mt-7 text-xs uppercase tracking-wider text-[#8C7B5A] underline underline-offset-4">Sign out</button>
+      <button disabled={busy} onClick={() => requestSignOut('storefront')} className="mt-7 text-xs uppercase tracking-wider text-[#8C7B5A] underline underline-offset-4 disabled:opacity-50">Sign out</button>
   </Modal>;
 }

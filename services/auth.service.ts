@@ -13,6 +13,7 @@ export interface Address { id: string; phone?: string | null; phone2?: string | 
 interface AuthResult { user: AuthUser; accessToken: string; }
 
 export const authService = {
+  resendVerification: (input: LoginInput) => apiRequest<{verificationEmailSent:boolean}>('/api/v1/auth/resend-verification', {method:'POST',body:JSON.stringify(input)}),
   login: (input: LoginInput) => apiRequest<AuthResult>('/api/v1/auth/login', { method: 'POST', body: JSON.stringify(input) }),
   verifyEmail: (token: string) => apiRequest<{verified:boolean}>('/api/v1/auth/verify-email', {method:'POST',body:JSON.stringify({token})}),
   register: (input: RegisterInput) => {

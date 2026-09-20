@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { Search, ShoppingBag, Menu, X, ArrowRight, Sparkles, BookOpen, Layers, Globe } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X, ArrowRight, BookOpen, Layers, Globe } from 'lucide-react';
+import { AnnouncementTicker } from './AnnouncementTicker';
 import { AccountButton } from './auth/AuthModal';
 import { StoreLogo } from './StoreLogo';
 import { AnimatedPanel } from './ui/AnimatedPanel';
@@ -20,18 +21,7 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 bg-[#FAF9F5]/95 backdrop-blur-md border-b border-[#E8E2D5] transition-all duration-200">
       {/* Top Announcement Ribbon */}
-      <div className="bg-[#1C1A17] text-[#EDE7DB] text-xs py-1.5 px-4 text-center tracking-widest uppercase font-medium flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-        <span>Autumn 2025 Reserve: First Cold-Pressed Palm Oil & Aged Ofada Now Released</span>
-        <button
-          onClick={() => {
-            setActiveView('products');
-          }}
-          className="hidden md:inline-flex items-center gap-1 text-[#D4AF37] hover:underline font-semibold ml-2 text-xs normal-case tracking-normal"
-        >
-          View Collection <ArrowRight className="w-3 h-3" />
-        </button>
-      </div>
+      <AnnouncementTicker />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">

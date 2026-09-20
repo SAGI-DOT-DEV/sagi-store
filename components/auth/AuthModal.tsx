@@ -8,6 +8,7 @@ import { RegisterForm } from './RegisterForm';
 import { ProfileModal } from './ProfileModal';
 import { Modal } from '../ui/Modal';
 import { AccountButtonSkeleton } from './AccountButtonSkeleton';
+import { SignOutModal } from './SignOutModal';
 
 export function AuthModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -29,7 +30,8 @@ export function AccountButton() {
 
 // Mounted once in the root layout, never once per desktop/mobile button.
 export function AccountModalHost() {
-  const { user, authModalOpen, setAuthModalOpen, profileModalOpen, setProfileModalOpen } = useAuth();
+  const { user, authModalOpen, setAuthModalOpen, profileModalOpen, setProfileModalOpen, signOutModal, cancelSignOut } = useAuth();
+  if (signOutModal && user) return <SignOutModal admin={signOutModal === 'admin'} onCancel={cancelSignOut} />;
   if (authModalOpen) return <AuthModal open onClose={() => setAuthModalOpen(false)} />;
   if (profileModalOpen && user) return <ProfileModal open onClose={() => setProfileModalOpen(false)} />;
   return null;

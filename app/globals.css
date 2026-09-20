@@ -25,6 +25,20 @@ select option {
 }
 
 /* Custom subtle scrollbar */
+@keyframes announcement-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.announcement-track { animation: announcement-scroll 28s linear infinite; }
+.announcement-copy { min-width: calc(100vw - 36px); }
+.announcement-ribbon:hover .announcement-track,
+.announcement-ribbon:focus-within .announcement-track { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) {
+  .announcement-track { animation: none; width: 100%; }
+  .announcement-copy { min-width: 0; width: 100%; white-space: normal; flex-wrap: wrap; gap: 4px 12px; text-align: center; padding-inline: 12px; }
+  .announcement-copy + .announcement-copy, .announcement-toggle { display: none; }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

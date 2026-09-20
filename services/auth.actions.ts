@@ -5,6 +5,10 @@ export async function loginAction(input: LoginInput) {
   return authService.login(loginSchema.parse(input));
 }
 
+export async function resendVerificationAction(input: LoginInput) {
+  return authService.resendVerification(loginSchema.parse(input));
+}
+
 export async function registerAction(input: RegisterInput) {
   return authService.register(registerSchema.parse(input));
 }

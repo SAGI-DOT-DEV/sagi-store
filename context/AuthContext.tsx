@@ -29,6 +29,9 @@ interface AuthContextValue {
   setAuthModalOpen: (open: boolean) => void;
   profileModalOpen: boolean;
   setProfileModalOpen: (open: boolean) => void;
+  signOutModal: 'storefront' | 'admin' | null;
+  requestSignOut: (source: 'storefront' | 'admin') => void;
+  cancelSignOut: () => void;
   login: (input: LoginInput) => Promise<void>;
   register: (input: RegisterInput) => Promise<{ email: string; verificationEmailSent: boolean }>;
   logout: () => Promise<void>;
@@ -42,7 +45,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [accountModal, setAccountModal] = useState<'auth' | 'profile' | null>(null);
+  const [accountModal, setAccountModal] = useState<'auth' | 'profile' | 'signout-storefront' | 'signout-admin' | null>(null);
+  const signOutModal = accountModal === 'signout-storefront' ? 'storefront' : accountModal === 'signout-admin' ? 'admin' : null;
+  const requestSignOut = (source: 'storefront' | 'admin') => setAccountModal(source === 'admin' ? 'signout-admin' : 'signout-storefront');
+  const cancelSignOut = () => setAccountModal(current => current === 'signout-storefront' ? 'profile' : null);
   const authModalOpen = accountModal === 'auth';
   const profileModalOpen = accountModal === 'profile';
   const setAuthModalOpen = (open: boolean) => setAccountModal(current => open ? 'auth' : current === 'auth' ? null : current);
@@ -118,12 +124,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = (input: RegisterInput) => registerAction(input);
 
   const logout = async () => {
+    // Keep the confirmation visible and retryable if the server cannot revoke the session.
+    await authService.logout();
     clearUserCache();
     saveSessionToken(null);
     setAccessToken(null); setUser(null); setAccountModal(null);
-    try { await authService.logout(); } finally {
-      window.localStorage.removeItem(TOKEN_KEY); setAccessToken(null); setUser(null);
-    }
   };
 
   const addAddress = async (input: AddressInput) => {
@@ -138,7 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser((current) => current ? { ...current, addresses: (current.addresses || []).map((item) => item.id === id ? address : (address.isDefault ? { ...item, isDefault: false } : item)) } : current);
   };
 
-  return <AuthContext.Provider value={{ user, accessToken, isLoading, sessionError, retrySession, authModalOpen, setAuthModalOpen, profileModalOpen, setProfileModalOpen, login, register, logout, addAddress, updateAddress }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, accessToken, isLoading, sessionError, retrySession, authModalOpen, setAuthModalOpen, profileModalOpen, setProfileModalOpen, signOutModal, requestSignOut, cancelSignOut, login, register, logout, addAddress, updateAddress }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
