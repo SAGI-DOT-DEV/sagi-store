@@ -7,9 +7,32 @@ select option {
 }
 
 @theme {
-  --font-serif: "Bodoni Moda", "Playfair Display", Georgia, serif;
-  --font-sans: "DM Sans", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
-  --font-display: "Bodoni Moda", "Playfair Display", Georgia, serif;
+  --font-serif: Arial, Helvetica, sans-serif;
+  --font-sans: Arial, Helvetica, system-ui, -apple-system, sans-serif;
+  --font-display: Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+  .store-container { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+  .store-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .18em; line-height: 1.6; text-transform: uppercase; }
+  .store-heading { font-weight: 600; letter-spacing: -.045em; line-height: 1.08; text-wrap: balance; }
+  .store-button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 8px; border-radius: 9999px; padding: 12px 24px; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; transition: background-color .2s, transform .2s; }
+  .store-button:disabled { cursor: not-allowed; opacity: .5; }
+  .store-button-dark { background: #000; color: #fff; }
+  .store-button-dark:hover:not(:disabled) { background: #262626; }
+  .store-button-light { background: #fff; color: #000; }
+  .store-button-light:hover:not(:disabled) { background: #e5e5e5; }
+  .store-button-outline { border: 1px solid #d4d4d4; background: #fff; color: #000; }
+  .store-button-outline:hover:not(:disabled) { border-color: #000; }
+  .store-icon { display: inline-flex; width: 44px; height: 44px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 9999px; transition: background-color .2s; }
+  .store-icon:hover { background: #e5e5e5; }
+  .store-no-scrollbar { scrollbar-width: none; }
+  .store-no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+@layer base {
+  button:not(:disabled), a { -webkit-tap-highlight-color: transparent; cursor: pointer; }
+  :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 }
 
 @layer base {

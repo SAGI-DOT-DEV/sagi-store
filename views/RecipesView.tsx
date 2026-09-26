@@ -1,21 +1,29 @@
-import React from 'react';
-import { ArrowRight, ChefHat, Clock, Sparkles } from 'lucide-react';
+'use client';
+import { useEffect, useState } from 'react';
 import { getRecipes, type Recipe } from '../services/recipes.service';
-import { RecipeCardSkeleton } from '../components/ui/RecipeCardSkeleton';
+import { RecipeCard } from '../components/recipes/RecipeCard';
+import { ProductCardSkeleton } from '../components/ui/ProductCardSkeleton';
 import { RecipeDetailModal } from '../components/RecipeDetailModal';
+import { CatalogFeedback } from '../components/catalog/CatalogFeedback';
 
-export const RecipesView: React.FC = () => {
-  const [recipes, setRecipes] = React.useState<Recipe[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [page, setPage] = React.useState(1);
-  const [totalPages, setTotalPages] = React.useState(1);
-  const [selected, setSelected] = React.useState<Recipe | null>(null);
-  React.useEffect(() => { let cancelled = false; setLoading(true); getRecipes(page, 6).then((result) => { if (!cancelled) { setRecipes(result.items); setTotalPages(result.pagination.totalPages); } }).catch(() => { if (!cancelled) setRecipes([]); }).finally(() => { if (!cancelled) setLoading(false); }); return () => { cancelled = true; }; }, [page]);
-  return <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
-    <header className="space-y-4 max-w-3xl"><div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#737373]"><Sparkles className="w-3.5 h-3.5" /> Recipes & Gastronomy</div><h1 className="font-serif text-3xl sm:text-5xl font-normal text-[#000000]">The Kitchen Journals</h1><p className="text-xs sm:text-sm text-[#535353] leading-relaxed">Nigerian recipes documented with clear methods, essential equipment, and practical notes for confident cooking at home.</p></header>
-    <section className="space-y-8"><div className="flex items-center justify-between pb-3 border-b border-[#E4E4E4]"><h2 className="font-serif text-2xl font-bold text-[#000000] flex items-center gap-2"><ChefHat className="w-5 h-5 text-[#737373]" /> Featured recipes</h2><span className="text-xs text-[#727272] font-semibold uppercase tracking-wider">{recipes.length} recipes</span></div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{loading ? Array.from({ length: 3 }, (_, i) => <RecipeCardSkeleton key={i} />) : recipes.length ? recipes.map((recipe) => <article key={recipe.id} className="bg-[#FFFFFF] border border-[#E4E4E4] rounded-sm overflow-hidden flex flex-col group hover:shadow-lg transition-all"><button type="button" onClick={() => setSelected(recipe)} className="relative h-64 bg-[#F4F4F4] overflow-hidden text-left"><img src={recipe.image || '/product-placeholder.svg'} alt={recipe.title} referrerPolicy="no-referrer" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" /><span className="absolute top-3 left-3 bg-[#000000]/90 text-[#FFFFFF] text-[10px] uppercase font-bold tracking-widest px-2.5 py-1">{recipe.procedures.length} steps</span></button><div className="p-6 flex flex-1 flex-col justify-between space-y-5"><div className="space-y-2"><h3 className="font-serif text-xl font-bold text-[#000000]">{recipe.title}</h3><p className="text-xs text-[#535353] line-clamp-3 leading-relaxed">{recipe.notes || 'A carefully documented Nigerian kitchen recipe.'}</p></div><div className="pt-4 border-t border-[#E4E4E4] flex items-center justify-between text-xs font-semibold"><span className="flex items-center gap-1 text-[#727272]"><Clock className="w-3.5 h-3.5" /> {recipe.procedures.length} steps</span><button type="button" onClick={() => setSelected(recipe)} className="flex items-center gap-1">Read Recipe <ArrowRight className="w-3.5 h-3.5 text-[#737373]" /></button></div></div></article>) : <p className="md:col-span-3 text-sm text-[#535353]">Recipes coming soon.</p>}</div>
-      {!loading && totalPages > 1 && <div className="flex items-center justify-center gap-3 pt-4"><button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)} className="border border-[#D4D4D4] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#000000] disabled:opacity-40 disabled:cursor-not-allowed">Previous</button><span className="text-xs font-semibold text-[#535353]">Page {page} of {totalPages}</span><button type="button" disabled={page >= totalPages} onClick={() => setPage((current) => current + 1)} className="bg-[#000000] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#FFFFFF] disabled:opacity-40 disabled:cursor-not-allowed">Next</button></div>}
-    </section><RecipeDetailModal recipe={selected} onClose={() => setSelected(null)} />
+export function RecipesView() {
+  const [recipes,setRecipes] = useState<Recipe[]>([]);
+  const [loading,setLoading] = useState(true);
+  const [error,setError] = useState(false);
+  const [page,setPage] = useState(1);
+  const [totalPages,setTotalPages] = useState(1);
+  const [total,setTotal] = useState(0);
+  const [attempt,setAttempt] = useState(0);
+  const [selected,setSelected] = useState<Recipe | null>(null);
+  useEffect(() => {
+    let active = true; setLoading(true); setError(false);
+    getRecipes(page,6).then(result => { if (active) { setRecipes(result.items); setTotalPages(result.pagination.totalPages); setTotal(result.pagination.total); } }).catch(() => { if (active) setError(true); }).finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [page,attempt]);
+  return <div className="store-container py-14 sm:py-20">
+    <header className="max-w-2xl"><p className="store-eyebrow text-neutral-500">The culinary atelier</p><h1 className="store-heading mt-4 text-4xl sm:text-6xl">The Kitchen Journals</h1><p className="mt-5 text-sm leading-7 text-neutral-600">Nigerian recipes with clear methods, essential equipment, and practical notes. A little inspiration for your next meal.</p></header>
+    <section className="mt-12" aria-busy={loading}>{!loading && !error && <p className="mb-5 text-xs text-neutral-500">{total} recipes</p>}{loading ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"><span role="status" className="sr-only">Loading recipes</span>{[0,1,2,3,4,5].map(index => <ProductCardSkeleton key={index} />)}</div> : error ? <CatalogFeedback message="Recipes could not be loaded." onRetry={() => setAttempt(value => value + 1)} /> : recipes.length ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{recipes.map(recipe => <RecipeCard key={recipe.id} recipe={recipe} onSelect={setSelected} />)}</div> : <CatalogFeedback message="Our next recipes are on their way." />}</section>
+    {!loading && !error && totalPages > 1 && <nav aria-label="Recipe pages" className="mt-10 flex items-center justify-center gap-4"><button disabled={page === 1} onClick={() => setPage(value => value - 1)} className="store-button store-button-outline">Previous</button><span className="text-xs text-neutral-600">{page} / {totalPages}</span><button disabled={page >= totalPages} onClick={() => setPage(value => value + 1)} className="store-button store-button-dark">Next</button></nav>}
+    <RecipeDetailModal recipe={selected} onClose={() => setSelected(null)} />
   </div>;
-};
+}

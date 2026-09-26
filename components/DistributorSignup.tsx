@@ -69,7 +69,7 @@ export function DistributorSignup() {
         </label>)}
       </fieldset>
       {error && <p role="alert" className="text-sm text-neutral-300">{error}</p>}
-      <button type="submit" disabled={pending} className="flex items-center justify-center gap-2 bg-neutral-300 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-neutral-200 disabled:opacity-60">
+      <button type="submit" disabled={pending} className="store-button bg-neutral-300 text-black hover:bg-neutral-200">
         {pending ? <><Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />Submitting...</> : <>Sign up as a distributor<ArrowRight aria-hidden="true" className="h-4 w-4" /></>}
       </button>
     </form>}

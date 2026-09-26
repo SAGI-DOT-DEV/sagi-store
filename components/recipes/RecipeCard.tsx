@@ -1,0 +1,6 @@
+import { ArrowRight } from 'lucide-react';
+import type { Recipe } from '../../services/recipes.service';
+
+export function RecipeCard({ recipe, onSelect }: { recipe: Recipe; onSelect: (recipe: Recipe) => void }) {
+  return <article className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4 transition duration-300 hover:-translate-y-1 hover:shadow-lg"><button onClick={() => onSelect(recipe)} className="relative aspect-[4/3] overflow-hidden rounded-xl" aria-label={`Read ${recipe.title}`}><img src={recipe.image || '/product-placeholder.svg'} alt={recipe.title} referrerPolicy="no-referrer" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /><span className="absolute left-3 top-3 rounded-full bg-black px-3 py-1.5 text-[10px] font-semibold text-white">{recipe.procedures.length} steps</span></button><div className="flex flex-1 flex-col py-5"><h2 className="text-xl font-semibold leading-snug">{recipe.title}</h2>{recipe.notes && <p className="mt-3 line-clamp-3 text-sm leading-6 text-neutral-600">{recipe.notes}</p>}<button onClick={() => onSelect(recipe)} className="store-button store-button-dark mt-5 w-full">Get recipe<ArrowRight size={15} /></button></div></article>;
+}

@@ -130,7 +130,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addToCart = async (product: Product, weight?: string, quantity: number = 1) => {
     if (isLoading || sessionError) { showToast('Please wait for your account to load, or retry your account connection.'); return; }
     if (!accessToken) {
-      showToast('Please sign in to add items to your Pantry Bag');
+      showToast('Please sign in to add items to your cart');
       setAuthModalOpen(true);
       return;
     }
@@ -151,7 +151,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       setCart((current) => [...current, { product, selectedWeight: targetWeight, quantity, unitPrice: product.price * (sizeConfig?.priceMultiplier ?? 1), variantId }]);
     }
-    showToast('Added to your Pantry Bag', `${product.name} (${targetWeight})`);
+    showToast('Added to your cart', `${product.name} (${targetWeight})`);
     setIsCartOpen(true);
     try {
       // Keep the optimistic item rendered. Replacing the whole cart with a
@@ -162,7 +162,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       trackEvent('add_to_cart',{currency:'CAD',value:price*quantity,items:[{item_id:variantId,item_name:product.name,price,quantity}]});
     } catch (error) {
       if (isLatestMutation(mutationKey, version)) setCart(previousCart);
-      showToast(error instanceof Error ? error.message : 'Could not update your Pantry Bag');
+      showToast(error instanceof Error ? error.message : 'Could not update your cart');
     } finally {
       if (isLatestMutation(mutationKey, version)) setAddingToCartKey(null);
     }
@@ -177,7 +177,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const version = nextMutation(mutationKey);
     const previousCart = cart;
     setCart((current) => current.filter((entry) => entry.variantId !== item.variantId));
-    showToast('Removed from your Pantry Bag', item.product.name);
+    showToast('Removed from your cart', item.product.name);
     try { const result = await removeCartItem(accessToken, item.variantId); if (isLatestMutation(mutationKey, version)) setCart(result.items.map(mapCartItem)); } catch (error) { if (isLatestMutation(mutationKey, version)) setCart(previousCart); showToast(error instanceof Error ? error.message : 'Could not remove item'); }
   };
 

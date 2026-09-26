@@ -1,10 +1,25 @@
 export interface HomeContent {
+  spotlights?: HomeSpotlight[];
   hero: { eyebrow: string; title: string; emphasis: string; description: string; image: string; imageAlt: string; primaryCta: string; secondaryCta: string };
   metrics: { value: string; label: string }[];
   philosophy: { eyebrow: string; quote: string; attribution: string };
   staples: { eyebrow: string; title: string; catalogCta: string };
   journals: { eyebrow: string; title: string; description: string; cta: string };
   provenance: { eyebrow: string; title: string; description: string; cta: string };
+}
+
+export interface HomeSpotlight {
+  _key: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  primaryCta: string;
+  secondaryCta: string;
+  href: string;
+  badges: string[];
 }
 
 export const DEFAULT_HOME_CONTENT: HomeContent = {

@@ -1,12 +1,18 @@
 import { sanityClient } from '../sanity/client';
+import { defineQuery } from 'groq';
+import { normalizeSpotlights } from './home-spotlights';
 import { DEFAULT_HOME_CONTENT, type HomeContent } from '../data/home-content';
 
-const HOME_QUERY = `*[_type == "homePage"][0]{ "hero": hero{ ..., "image": image.asset->url }, metrics[]{_key, value, label}, philosophy, staples, journals, provenance }`;
+const HOME_QUERY = defineQuery(`*[_type == "homePage" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
+  "hero": hero{ eyebrow, title, emphasis, description, "image": image.asset->url, imageAlt, primaryCta, secondaryCta },
+  spotlights[]{ _key, eyebrow, title, subtitle, description, "image": image.asset->url, imageAlt, primaryCta, secondaryCta, href, badges },
+  metrics[]{_key, value, label}, philosophy, staples, journals, provenance
+}`);
 
 export async function getHomeContent(): Promise<HomeContent> {
   if (!sanityClient) return DEFAULT_HOME_CONTENT;
   try {
-    const content = await sanityClient.fetch<Partial<HomeContent>>(HOME_QUERY);
+    const content = await sanityClient.fetch<Partial<HomeContent>>(HOME_QUERY, {}, { cache: 'no-store', perspective: 'published' });
     if (!content) return DEFAULT_HOME_CONTENT;
 
     const text = (value: unknown, fallback: string) => {
@@ -25,6 +31,7 @@ export async function getHomeContent(): Promise<HomeContent> {
     }));
 
     return {
+      spotlights: normalizeSpotlights(content.spotlights, content.hero),
       hero: {
         eyebrow: text(hero?.eyebrow, DEFAULT_HOME_CONTENT.hero.eyebrow),
         title: text(hero?.title, DEFAULT_HOME_CONTENT.hero.title),

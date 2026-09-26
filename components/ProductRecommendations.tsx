@@ -1,11 +1,11 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getProducts } from '../services/products.service';
 import type { Product } from '../types';
 import { ProductCardSkeleton } from './ui/ProductCardSkeleton';
-import { formatCAD } from '../services/currency';
+import { ProductCard } from './catalog/ProductCard';
+import { CatalogFeedback } from './catalog/CatalogFeedback';
 
 export function ProductRecommendations({ productId }: { productId: string }) {
   const [products, setProducts] = useState<Product[] | null>(null);
@@ -13,21 +13,14 @@ export function ProductRecommendations({ productId }: { productId: string }) {
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let active = true;
-    getProducts(4).then(items => { if (active) setProducts(items); }).catch(() => { if (active) setError(true); });
+    setProducts(null); setError(false);
+    getProducts(5).then(items => { if (active) setProducts(items); }).catch(() => { if (active) setError(true); });
     return () => { active = false; };
-  }, [attempt]);
-  const related = products?.filter(product => product.id !== productId).slice(0, 3);
+  }, [attempt, productId]);
+  const related = products?.filter(product => product.id !== productId).slice(0,4);
   if (related && !related.length) return null;
-  return <section className="space-y-8 border-t border-[#E4E4E4] pt-8" aria-label="Complete your pantry">
-    <div className="flex items-center justify-between gap-4"><h3 className="font-serif text-2xl font-bold text-[#000000]">Complete Your Pantry</h3><Link href="/products" className="text-xs font-bold uppercase tracking-wider hover:underline">View All</Link></div>
-    {error ? <div className="text-sm text-[#535353]">Unable to load recommendations. <button onClick={() => { setError(false); setAttempt(value => value + 1); }} className="underline">Try again</button></div>
-      : <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-        {!related ? <><span role="status" className="sr-only">Loading products</span>{[0, 1, 2].map(index => <ProductCardSkeleton key={index} />)}</>
-          : related.map(product => <Link key={product.id} href={`/products/${encodeURIComponent(product.slug || product.id)}`} className="group rounded-sm border border-[#E4E4E4] bg-[#FFFFFF] p-4 transition-all hover:border-[#737373] hover:shadow-md">
-            <div className="mb-3 aspect-square overflow-hidden rounded-sm bg-[#F4F4F4]"><img src={product.image || '/product-placeholder.svg'} alt={product.name} loading="lazy" referrerPolicy="no-referrer" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = '/product-placeholder.svg'; }} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" /></div>
-            <h4 className="font-serif text-base font-bold text-[#000000]">{product.name}</h4>
-            <span className="mt-2 block text-xs font-bold">{formatCAD(product.price)}</span>
-          </Link>)}
-      </div>}
+  return <section className="space-y-8 border-t border-neutral-200 pt-14">
+    <header className="flex items-end justify-between gap-4"><div><p className="store-eyebrow text-neutral-500">A little more to discover</p><h2 className="store-heading mt-3 text-3xl sm:text-4xl">Complete your pantry</h2></div><Link href="/products" className="shrink-0 text-xs font-semibold underline underline-offset-4">View all</Link></header>
+    {error ? <CatalogFeedback message="Unable to load recommendations." onRetry={() => setAttempt(value => value + 1)} /> : <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{!related ? [0,1,2,3].map(index => <ProductCardSkeleton key={index} />) : related.map(product => <ProductCard key={product.id} product={product} />)}</div>}
   </section>;
 }
