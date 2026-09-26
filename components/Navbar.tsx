@@ -6,7 +6,6 @@ import { Search, ShoppingBag, Menu, X, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { StoreLogo } from './StoreLogo';
 import { AccountButton } from './auth/AuthModal';
-import { AnnouncementTicker } from './AnnouncementTicker';
 import { AnimatedPanel } from './ui/AnimatedPanel';
 
 export function Navbar() {
@@ -21,7 +20,6 @@ export function Navbar() {
     return () => document.removeEventListener('keydown', close);
   }, [open]);
   return <header className="sticky inset-x-0 top-0 z-40 border-b border-neutral-200 bg-white">
-    <AnnouncementTicker />
     <div className="store-container flex h-16 items-center justify-between gap-3">
       <Link href="/" aria-label="SAGI home" className="shrink-0"><StoreLogo className="w-20 sm:w-24" /></Link>
       <nav aria-label="Main navigation" className="hidden items-center gap-6 text-[10px] font-semibold uppercase tracking-[.16em] xl:flex">
