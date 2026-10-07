@@ -22,10 +22,8 @@ export function Navbar() {
   return <header className="sticky inset-x-0 top-0 z-40 border-b border-neutral-200 bg-white">
     <div className="store-container flex h-16 items-center justify-between gap-3">
       <Link href="/" aria-label="SAGI home" className="shrink-0">
-        <span className="flex h-11 w-11 items-center justify-center overflow-hidden md:hidden">
-          <img src="/elephant.png" alt="SAGI" width={44} height={44} className="h-11 w-11 translate-y-0.5 scale-[1.8] object-contain" />
-        </span>
-        <span className="hidden md:block"><StoreLogo className="w-24" /></span>
+        <span className="flex h-11 items-center md:hidden"><StoreLogo className="h-10" /></span>
+        <span className="hidden h-11 items-center md:flex"><StoreLogo className="h-11" /></span>
       </Link>
       <nav aria-label="Main navigation" className="hidden items-center gap-6 text-[10px] font-semibold uppercase tracking-[.16em] xl:flex">
         <Link href="/products" aria-current={pathname.startsWith('/products') ? 'page' : undefined} className="hover:underline underline-offset-8">Products</Link>
