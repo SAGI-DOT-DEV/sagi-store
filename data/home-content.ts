@@ -1,4 +1,8 @@
 export interface HomeContent {
+  showcases?: HomeSpotlight[];
+  showcaseOne?: HomeSpotlight;
+  showcaseTwo?: HomeSpotlight;
+  showcaseThree?: HomeSpotlight;
   spotlights?: HomeSpotlight[];
   hero: { eyebrow: string; title: string; emphasis: string; description: string; image: string; imageAlt: string; primaryCta: string; secondaryCta: string };
   metrics: { value: string; label: string }[];

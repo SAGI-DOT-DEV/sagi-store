@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { authService, type AuthUser } from '../services/auth.service';
 import { loginAction, registerAction } from '../services/auth.actions';
 import { addressSchema, type AddressInput, type LoginInput, type RegisterInput } from '../schemas/auth.schema';
@@ -24,7 +24,8 @@ interface AuthContextValue {
   accessToken: string | null;
   isLoading: boolean;
   sessionError: boolean;
-  retrySession: () => void;
+  isReconnecting: boolean;
+  retrySession: () => Promise<{ token: string; userId: string } | null>;
   authModalOpen: boolean;
   setAuthModalOpen: (open: boolean) => void;
   profileModalOpen: boolean;
@@ -54,8 +55,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const setAuthModalOpen = (open: boolean) => setAccountModal(current => open ? 'auth' : current === 'auth' ? null : current);
   const setProfileModalOpen = (open: boolean) => setAccountModal(current => open ? 'profile' : current === 'profile' ? null : current);
   const [sessionError, setSessionError] = useState(false);
-  const [restoreAttempt, setRestoreAttempt] = useState(0);
-  const retrySession = () => { setIsLoading(true); setSessionError(false); setRestoreAttempt(value => value + 1); };
+  const [isReconnecting, setIsReconnecting] = useState(false);
+  const sessionEpoch = useRef(0);
+  const reconnect = useRef<Promise<{ token: string; userId: string } | null> | null>(null);
+  const retrySession = () => {
+    if (reconnect.current) return reconnect.current;
+    const epoch = ++sessionEpoch.current;
+    setIsReconnecting(true);
+    const pending = Promise.resolve().then(async () => {
+      try {
+        const saved = window.localStorage.getItem(TOKEN_KEY);
+        if (!saved) { setSessionError(false); setAuthModalOpen(true); return null; }
+        const restoredUser = await authService.me(saved);
+        const token = window.localStorage.getItem(TOKEN_KEY);
+        if (epoch !== sessionEpoch.current || !token) return null;
+        setAccessToken(token);
+        setUser(restoredUser);
+        setSessionError(false);
+        return { token, userId: restoredUser.id };
+      } catch (error) {
+        if (epoch === sessionEpoch.current) setSessionError(!(error instanceof ApiError && error.status === 401));
+        return null;
+      } finally {
+        setIsReconnecting(false);
+        setIsLoading(false);
+        reconnect.current = null;
+      }
+    });
+    reconnect.current = pending;
+    return pending;
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -64,6 +93,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const handleSessionExpired = () => {
+      sessionEpoch.current += 1;
+      setSessionError(false);
       clearUserCache();
       window.localStorage.removeItem(TOKEN_KEY);
       setAccessToken(null);
@@ -84,6 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let active = true;
+    const epoch = sessionEpoch.current;
     const restore = async () => {
       const saved = window.localStorage.getItem(TOKEN_KEY);
       if (!saved) { clearUserCache(); setIsLoading(false); return; }
@@ -97,20 +129,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch { clearUserCache(); }
       try {
         const restoredUser = await authService.me(saved);
-        if (!active || !window.localStorage.getItem(TOKEN_KEY)) return;
+        if (!active || epoch !== sessionEpoch.current || !window.localStorage.getItem(TOKEN_KEY)) return;
         setAccessToken(window.localStorage.getItem(TOKEN_KEY));
         setUser(restoredUser);
+        setSessionError(false);
         setAuthModalOpen(false);
       } catch (error) {
-        if (active && !(error instanceof ApiError && error.status === 401)) setSessionError(true);
+        if (active && epoch === sessionEpoch.current && !(error instanceof ApiError && error.status === 401)) setSessionError(true);
       } finally { if (active) setIsLoading(false); }
     };
     void restore();
     return () => { active = false; };
-  }, [restoreAttempt]);
+  }, []);
 
   const login = async (input: LoginInput) => {
     const result = await loginAction(input);
+    sessionEpoch.current += 1;
     saveSessionToken(result.accessToken);
     setAccessToken(result.accessToken);
     try { setUser(await authService.me(result.accessToken)); } catch (error) {
@@ -126,6 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     // Keep the confirmation visible and retryable if the server cannot revoke the session.
     await authService.logout();
+    sessionEpoch.current += 1;
     clearUserCache();
     saveSessionToken(null);
     setAccessToken(null); setUser(null); setAccountModal(null);
@@ -143,7 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser((current) => current ? { ...current, addresses: (current.addresses || []).map((item) => item.id === id ? address : (address.isDefault ? { ...item, isDefault: false } : item)) } : current);
   };
 
-  return <AuthContext.Provider value={{ user, accessToken, isLoading, sessionError, retrySession, authModalOpen, setAuthModalOpen, profileModalOpen, setProfileModalOpen, signOutModal, requestSignOut, cancelSignOut, login, register, logout, addAddress, updateAddress }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, accessToken, isLoading, sessionError, isReconnecting, retrySession, authModalOpen, setAuthModalOpen, profileModalOpen, setProfileModalOpen, signOutModal, requestSignOut, cancelSignOut, login, register, logout, addAddress, updateAddress }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

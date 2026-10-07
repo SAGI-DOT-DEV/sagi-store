@@ -5,6 +5,7 @@ import { LoaderCircle } from 'lucide-react';
 import { checkoutService, pendingCheckoutKey, type CheckoutOrder } from '../services/checkout.service';
 import {trackEvent} from '../services/analytics';
 import { SavedOrderSummary } from '../components/checkout/SavedOrderSummary';
+import { FreeShippingNotice } from '../components/checkout/FreeShippingNotice';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
@@ -202,6 +203,7 @@ export const CheckoutView = ({ requestedOrderId }: { requestedOrderId?: string }
       <aside className="space-y-5 rounded-lg border border-[#E4E4E4] bg-[#FFFFFF] p-6 lg:col-span-5">
         <h2 className="font-serif text-xl">Order summary</h2>
         {restoring ? <p role="status">Loading saved order...</p> : restoreError ? <p className="text-sm text-[#535353]">Order details temporarily unavailable.</p> : resumeOrder ? <SavedOrderSummary order={resumeOrder.order} /> : <>
+        <FreeShippingNotice subtotal={subtotal} confirmed={quote?.freeShippingEligible === true} />
         <div className="max-h-80 space-y-4 overflow-y-auto">
           {!cart.length && <p className="py-4 text-sm text-[#535353]">Your bag is empty. <Link href="/products" className="underline underline-offset-4">Explore the collection</Link></p>}
           {cart.map((item) => <div key={item.variantId || item.product.id} className="flex items-center gap-3">

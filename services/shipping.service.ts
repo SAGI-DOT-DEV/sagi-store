@@ -1,5 +1,11 @@
 import { apiRequest } from './api-client';
 
+export type ShippingPolicy = { freeShippingThreshold: number | null; currency: string };
+
+export function getShippingPolicy() {
+  return apiRequest<ShippingPolicy>('/api/v1/shipping/policy');
+}
+
 export type ShippingRate = {
   id: string;
   carrier: string;

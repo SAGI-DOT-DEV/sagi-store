@@ -21,10 +21,10 @@ export function AuthModal({ open, onClose }: { open: boolean; onClose: () => voi
 }
 
 export function AccountButton() {
-  const { user, isLoading, sessionError, retrySession } = useAuth();
+  const { user, isLoading, sessionError, isReconnecting, retrySession } = useAuth();
   const { setAuthModalOpen, setProfileModalOpen } = useAuth();
   if (isLoading) return <AccountButtonSkeleton />;
-  if (sessionError && !user) return <button onClick={retrySession} className="rounded-full bg-[#000000] px-4 py-2.5 text-xs text-[#FFFFFF]">Retry account</button>;
+  if (sessionError || isReconnecting) return <button onClick={() => void retrySession()} disabled={isReconnecting} aria-busy={isReconnecting} className="rounded-full bg-[#000000] px-4 py-2.5 text-xs text-[#FFFFFF] disabled:opacity-60">{isReconnecting ? 'Reconnecting...' : 'Retry account'}</button>;
   return <button onClick={() => user ? setProfileModalOpen(true) : setAuthModalOpen(true)} className="flex items-center gap-2 rounded-full bg-[#000000] px-3.5 py-2.5 text-[#FFFFFF] shadow-sm transition-colors hover:bg-[#272727]" title={user ? 'Open your profile' : 'Sign in or create an account'}><UserCircle className="h-5 w-5 text-[#737373]" /><span className="text-xs font-semibold uppercase tracking-wider">{user ? 'Profile' : 'Sign in'}</span></button>;
 }
 

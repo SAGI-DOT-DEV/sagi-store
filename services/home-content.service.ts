@@ -4,6 +4,10 @@ import { normalizeSpotlights } from './home-spotlights';
 import { DEFAULT_HOME_CONTENT, type HomeContent } from '../data/home-content';
 
 const HOME_QUERY = defineQuery(`*[_type == "homePage" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]{
+  showcases[]{ _key, subtitle, description, "image": image.asset->url, imageAlt, primaryCta, secondaryCta, href },
+  showcaseOne{ "_key": "showcase-one", subtitle, description, "image": image.asset->url, imageAlt, primaryCta, secondaryCta, href },
+  showcaseTwo{ "_key": "showcase-two", subtitle, description, "image": image.asset->url, imageAlt, primaryCta, secondaryCta, href },
+  showcaseThree{ "_key": "showcase-three", subtitle, description, "image": image.asset->url, imageAlt, primaryCta, secondaryCta, href },
   "hero": hero{ eyebrow, title, emphasis, description, "image": image.asset->url, imageAlt, primaryCta, secondaryCta },
   spotlights[]{ _key, eyebrow, title, subtitle, description, "image": image.asset->url, imageAlt, primaryCta, secondaryCta, href, badges },
   metrics[]{_key, value, label}, philosophy, staples, journals, provenance
@@ -30,8 +34,16 @@ export async function getHomeContent(): Promise<HomeContent> {
       label: text(content.metrics?.[index]?.label, fallback.label),
     }));
 
+    const namedShowcases = [content.showcaseOne, content.showcaseTwo, content.showcaseThree];
+    const hasNamedShowcase = namedShowcases.some((showcase) => Boolean(showcase));
+    const showcaseSource = content.showcases?.length
+      ? content.showcases
+      : hasNamedShowcase
+      ? namedShowcases.map((showcase, index) => ({ ...showcase, _key: showcase?._key || `showcase-${index + 1}` }))
+      : content.spotlights;
+
     return {
-      spotlights: normalizeSpotlights(content.spotlights, content.hero),
+      spotlights: normalizeSpotlights(showcaseSource, content.hero),
       hero: {
         eyebrow: text(hero?.eyebrow, DEFAULT_HOME_CONTENT.hero.eyebrow),
         title: text(hero?.title, DEFAULT_HOME_CONTENT.hero.title),

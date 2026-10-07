@@ -49,7 +49,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
-  const { accessToken, user, isLoading, sessionError, setAuthModalOpen } = useAuth();
+  const { accessToken, user, isLoading, sessionError, isReconnecting, retrySession, setAuthModalOpen } = useAuth();
   const [activeView, setActiveViewState] = useState<'home' | 'products' | 'journals' | 'product-detail' | 'checkout'>('home');
   const setActiveView = (view: 'home' | 'products' | 'journals' | 'product-detail' | 'checkout') => {
     setActiveViewState(view);
@@ -127,9 +127,29 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const recoveringAdd = useRef(false);
   const addToCart = async (product: Product, weight?: string, quantity: number = 1) => {
-    if (isLoading || sessionError) { showToast('Please wait for your account to load, or retry your account connection.'); return; }
-    if (!accessToken) {
+    if (recoveringAdd.current) return;
+    if (isLoading && !user) { showToast('Your account is still loading. Please try again shortly.'); return; }
+    let token = accessToken;
+    if ((sessionError || isReconnecting || isLoading) && user) {
+      recoveringAdd.current = true;
+      const toastId = showToast('Reconnecting your account...', undefined, 'loading');
+      setAddingToCartKey(`${product.id}:${weight || product.availableSizes[0]?.weight}`);
+      const restored = await retrySession();
+      recoveringAdd.current = false;
+      dismissToast(toastId);
+      setAddingToCartKey(null);
+      if (!restored || restored.userId !== user.id || currentUserId.current !== user.id) {
+        showToast('Unable to reconnect. Please retry your account or sign in again.', undefined, 'error');
+        return;
+      }
+      token = restored.token;
+    } else if (sessionError) {
+      showToast('Unable to connect to your account. Use Retry account to reconnect.', undefined, 'error');
+      return;
+    }
+    if (!token) {
       showToast('Please sign in to add items to your cart');
       setAuthModalOpen(true);
       return;
@@ -157,7 +177,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Keep the optimistic item rendered. Replacing the whole cart with a
       // slower/stale response here causes items to disappear and re-appear.
       // The next cart refresh still reconciles state with the server.
-      await addCartItem(accessToken, variantId, quantity);
+      await addCartItem(token, variantId, quantity);
       const price=product.price*(sizeConfig?.priceMultiplier??1);
       trackEvent('add_to_cart',{currency:'CAD',value:price*quantity,items:[{item_id:variantId,item_name:product.name,price,quantity}]});
     } catch (error) {
