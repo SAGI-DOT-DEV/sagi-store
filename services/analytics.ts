@@ -4,7 +4,10 @@ type AnalyticsWindow=Window&{dataLayer?:unknown[];gtag?:(...args:unknown[])=>voi
 export type AnalyticsItem={item_id:string;item_name:string;price:number;quantity:number};
 let initialized=false;
 export function analyticsEnabled(){return typeof window!=='undefined'&&/^G-[A-Z0-9]+$/.test(GA_ID)&&process.env.NEXT_PUBLIC_GA_ENABLED==='true'&&(process.env.NEXT_PUBLIC_GA_DEBUG==='true'||!['localhost','127.0.0.1','::1','[::1]'].includes(window.location.hostname));}
-export function consentGranted(){try{return localStorage.getItem(CONSENT_KEY)==='granted';}catch{return false;}}
+function readConsentCookie(){try{const value=document.cookie.split(';').map(item=>item.trim()).find(item=>item.startsWith(`${CONSENT_KEY}=`))?.slice(CONSENT_KEY.length+1);return value==='granted'||value==='denied'?value:null;}catch{return null;}}
+function writeConsentCookie(value:'granted'|'denied'){const secure=location.protocol==='https:'?'; Secure':'';document.cookie=`${CONSENT_KEY}=${value}; Max-Age=15552000; Path=/; SameSite=Lax${secure}`;}
+export function analyticsConsent(){const saved=readConsentCookie();if(saved)return saved;try{const legacy=localStorage.getItem(CONSENT_KEY);if(legacy==='granted'||legacy==='denied'){writeConsentCookie(legacy);localStorage.removeItem(CONSENT_KEY);return legacy;}}catch{}return null;}
+export function consentGranted(){return analyticsConsent()==='granted';}
 export function safePageLocation(){
  const page=new URL(window.location.origin+window.location.pathname);
  const landing=new URL(window.location.search||'',page);
@@ -30,7 +33,7 @@ export function initializeAnalytics(){
  return true;
 }
 export function setAnalyticsConsent(value:'granted'|'denied'){
- try{localStorage.setItem(CONSENT_KEY,value);}catch{}
+ writeConsentCookie(value);
  const win=window as unknown as AnalyticsWindow;
  if(value==='denied'){
   win[`ga-disable-${GA_ID}`]=true;win.gtag?.('consent','update',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
